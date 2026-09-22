@@ -66,7 +66,7 @@ preferences via a dedicated settings menu" requirement:
 ## Project Startup Instructions
 Download the APK to a mobile device for the fully functional mobile app. If trying to run in Android Studio, the project will work, except for the interactive maps
 as the API Key is not included in GitHub. Hence, we suggest downloading the APK onto a mobile device for a better experience. 
-
+To Download the APK, simply go to the Tags of this repository.
 
 
 
