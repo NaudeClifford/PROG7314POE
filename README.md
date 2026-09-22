@@ -9,7 +9,7 @@ mutual interest opens a chat that could possibly link them to their next job/can
 |---|---|---|---|
 |Ruan Helgaard|Hartman|ST10453370|Group 1|
 |Alexandro|Ornelas|ST10437348|Group 1|
-|Leo|Van Niekerk|ST10445055|Group 3|
+|Joe Leo|Van Niekerk|ST10445055|Group 3|
 |Clifford|Naude|ST10258513|Group 1|
 
 ## YouTube Video Link
