@@ -68,6 +68,13 @@ Download the APK to a mobile device for the fully functional mobile app. If tryi
 as the API Key is not included in GitHub. Hence, we suggest downloading the APK onto a mobile device for a better experience. 
 To Download the APK, simply go to the Tags of this repository.
 
+Demo login details (Student):
+Email - lerato.student@swipehire.example.com
+Password - StudentDemo!2026
+
+Demo login details (Company):
+Email - company.demo@swipehire.example.com
+Password - CompanyDemo!2026
 
 
 ## Stack
