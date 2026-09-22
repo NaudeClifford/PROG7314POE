@@ -3,7 +3,7 @@ name: Deploy SwipeHire API to Azure
 on:
   push:
     branches:
-      - Features
+      - master
     paths:
       - 'SwipeHire.Api/**'
       - 'NuGet.Config'
