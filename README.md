@@ -50,7 +50,7 @@ preferences via a dedicated settings menu" requirement:
 - **Privacy** — profile visibility toggle
 - **Language** - change language of the application
 - **Appearance** — Light / Dark / Match system theme, applied live via `SwipeHireTheme`
-- **Security** — biometric lock toggle (UI hook — wire to `BiometricPrompt` once auth lands)
+- **Security** — biometric lock toggle (UI hook — wire to `BiometricPrompt` once auth lands) *Please note that this function does not work yet. Only to be implemented in part 3*
 - **Log out**
 
 
