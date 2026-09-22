@@ -1,13 +1,20 @@
 # SwipeHire — Android Frontend (Part 2 Prototype)
 
 Native Kotlin + Jetpack Compose frontend for **SwipeHire**, the reverse job-matching app from the
-PROG7314 Part 1 design (companies swipe on student profiles, students swipe on job postings,
-mutual interest opens a chat).
+PROG7314 Part 1 design where companies swipe on student profiles, students swipe on job postings,
+mutual interest opens a chat that could possibly link them to their next job/candidate.
 
-**Scope of this build:** UI layer only — no live networking. Screens run on realistic mock data
-so the whole flow can be demoed end-to-end on a physical device while the API and feature work
-land from the rest of the team. Swap the mock lists in `data/Models.kt` for real API calls once
-the REST layer is ready.
+## YouTube Video Link
+ https://www.youtube.com/watch?v=MQEapbOJT-U
+
+## Classroom50 Repository Link
+https://github.com/EMGPRS/prog7314-2026-poe-part-2-group-naudeclifford.git
+
+## Public Repository Link
+https://github.com/VanNiekerkJoe/SwipeHire.git
+
+
+
 
 ## Screens
 
@@ -39,18 +46,6 @@ preferences via a dedicated settings menu" requirement:
 
 ## Google Maps setup (required to run)
 
-The Maps API key is kept out of version control via the Secrets Gradle Plugin:
-
-1. Get a Maps SDK for Android API key from the [Google Cloud Console](https://console.cloud.google.com/google/maps-apis) (enable "Maps SDK for Android").
-2. In the project root, create (or edit) `local.properties` — it's already gitignored — and add:
-   ```
-   MAPS_API_KEY=your_real_key_here
-   ```
-3. Sync Gradle. `local.defaults.properties` (committed) provides a placeholder so the project still
-   builds without a key, but the map won't render tiles until each teammate sets their own key.
-
-The app also requests `ACCESS_FINE_LOCATION` / `ACCESS_COARSE_LOCATION` at runtime (handled in
-`NearbyJobsScreen`) to power "Jobs near you."
 
 ## Stack
 
@@ -60,43 +55,35 @@ The app also requests `ACCESS_FINE_LOCATION` / `ACCESS_COARSE_LOCATION` at runti
 - Custom gesture-driven swipe card stack (no third-party swipe library)
 - Maps Compose + Play Services Location for job locations and "Jobs near you"
 
-## Opening the project
-
-1. Open the `SwipeHire/` folder in Android Studio (Koala or newer recommended).
-2. Add your Maps API key per the section above.
-3. Let Gradle sync — it will pull dependencies from Google's Maven and Maven Central.
-4. Run on a physical device (min SDK 26) per the POE requirement.
-
-## Next steps for the team
-
-- Wire `LoginScreen` to real Google SSO and `SettingsScreen`'s biometric toggle to `BiometricPrompt`.
-- Replace `MockData` with calls to the ASP.NET Core REST API once endpoints are live — this includes
-  geocoding a job's typed address into `latitude`/`longitude` when an employer posts it.
-- Hook Room for offline caching per the original Part 1 design.
-
-
 
 ## REST API Endpoints
+| Method | Endpoint | Description |
+|---|---|---|
+| **GET** | `/api/jobs` | Fetches the full list of job postings to populate the student swipe feed and map views |
+| **POST** | `/api/jobs` | Creates a new job posting for hiring companies |
+| **DELETE** | `/api/jobs/{id}` | Deletes an existing job posting by its unique ID |
+| **GET** | `/api/companies/{companyId}/jobs` | List a company’s jobs |
+| **POST** | `/api/companies` | Registers a new company profile |
+| **PUT** | `/api/companies/{id}` | Updates company details, location, and industry information |
+| **GET** | `/api/students` | Fetches student profiles to populate the company candidate swipe feed |
+| **POST** | `/api/students` | Registers a new student profile during initial onboarding |
+| **PUT** | `/api/students/{id}` | Updates an existing student's profile information, skills, and blurb |
+| **GET** | `/api/swipes/{userId}` | Get previously swiped IDs |
+| **POST** | `/api/swipes` | Records a swipe action between users/jobs and determines if a mutual match occurred |
+| **DELETE** | `/api/swipes` | Undo a swipe; takes `userId`, `targetId`, and `targetUserId` as query parameters |
+| **GET** | `/api/users/{userId}/saved` | Get saved jobs and students |
+| **PUT** | `/api/users/{userId}/saved/{kind}/{itemId}` | Save or unsave an item; `kind` is `job` or `student` |
+| **GET** | `/api/users/{userId}/settings` | Get account settings |
+| **PUT** | `/api/users/{userId}/settings` | Update account settings |
+| **POST** | `/api/location/geocode` | Convert an address to coordinates |
 
-GET /api/jobs — Fetches the full list of job postings to populate the student swipe feed and map views.
+## GitHub Workflows (proof that they worked)
+<img width="1880" height="762" alt="image" src="https://github.com/user-attachments/assets/3e4491ba-aab5-49aa-9ac8-805200c05e46" />
 
-POST /api/jobs — Creates a new job posting for hiring companies.
+Android Unit Tests: 
+<img width="1845" height="756" alt="image" src="https://github.com/user-attachments/assets/c1ab5424-051d-4740-a673-580aeed55f75" />
 
-DELETE /api/jobs/{id} — Deletes an existing job posting by its unique ID.
+.NET API Build:
+<img width="1871" height="788" alt="image" src="https://github.com/user-attachments/assets/891d722a-f07c-4107-abc0-b0e1c0cad655" />
 
-GET /api/students — Fetches student profiles to populate the company candidate swipe feed.
 
-POST /api/students — Registers a new student profile during initial onboarding.
-
-PUT /api/students/{id} — Updates an existing student's profile information, skills, and blurb.
-
-POST /api/companies — Registers a new company profile.
-
-PUT /api/companies/{id} — Updates company details, location, and industry information.
-
-POST /api/swipes — Records a swipe action between users/jobs and determines if a mutual match occurred.
-
-POST /api/location/geocode — Converts a physical address string into geographic coordinates (latitude and longitude) for distance calculations and map markers.
-
-## How to run the API and mobile app
-Open the SwipeHire.Api solution in Visual Studio 2022, press F5 to start the web service locally on http://localhost:5000 (or verify Swagger UI opens), then open the SwipeHire project in Android Studio and run the app on an Android Emulator—the app communicates directly with your C# backend via Retrofit using the local loopback address 10.0.2.2:5000 (you can verify active traffic by hitting breakpoints set inside your C# controllers).
