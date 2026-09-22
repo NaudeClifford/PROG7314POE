@@ -54,6 +54,15 @@ preferences via a dedicated settings menu" requirement:
 - **Log out**
 
 
+<img width="384" height="796" alt="Screenshot 2026-09-22 090826" src="https://github.com/user-attachments/assets/f37b2974-6790-4b89-8d45-eca32eaa78b2" />
+
+
+
+<img width="386" height="786" alt="Screenshot 2026-09-22 090843" src="https://github.com/user-attachments/assets/b6982c57-92b4-4470-8e0e-c3a1e748388c" />
+
+
+
+
 ## Project Startup Instructions
 Download the APK to a mobile device for the fully functional mobile app. If trying to run in Android Studio, the project will work, except for the interactive maps
 as the API Key is not included in GitHub. Hence, we suggest downloading the APK onto a mobile device for a better experience. 
