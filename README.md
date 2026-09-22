@@ -4,6 +4,14 @@ Native Kotlin + Jetpack Compose frontend for **SwipeHire**, the reverse job-matc
 PROG7314 Part 1 design where companies swipe on student profiles, students swipe on job postings,
 mutual interest opens a chat that could possibly link them to their next job/candidate.
 
+## Group Members
+|Name|Surname|StudentNo|Group|
+|---|---|---|---|
+|Ruan Helgaard|Hartman|ST10453370|Group 1|
+|Alexandro|Ornelas|ST10437348|Group 1|
+|Leo|Van Niekerk|ST10445055|Group 3|
+|Clifford|Naude|ST10258513|Group 1|
+
 ## YouTube Video Link
  https://www.youtube.com/watch?v=MQEapbOJT-U
 
@@ -15,20 +23,28 @@ https://github.com/VanNiekerkJoe/SwipeHire.git
 
 
 
-
 ## Screens
 
-| Screen | File | Notes |
-|---|---|---|
-| Login | `ui/screens/LoginScreen.kt` | Google SSO + biometric sign-in entry points (stubbed) |
-| Role select | `ui/screens/RoleSelectScreen.kt` | Choose Student / Company — same screen serves both |
-| Discover | `ui/screens/DiscoverScreen.kt` | Draggable swipe-card stack (`ui/components/SwipeCardStack.kt`) |
-| Matches | `ui/screens/MatchesScreen.kt` | List of mutual matches with unread indicator |
-| Chat | `ui/screens/ChatDetailScreen.kt` | Per-match conversation, local send |
-| Profile | `ui/screens/ProfileScreen.kt` | Adapts content to Student vs Company account type |
-| **Settings** | `ui/screens/SettingsScreen.kt` | **20-mark deliverable — see below** |
-| Jobs near you | `ui/screens/NearbyJobsScreen.kt` | Google Map + distance-sorted list, from Discover's "Near you" button (student view) |
-| Job location | `ui/screens/JobLocationScreen.kt` | Single job on a map with a "Get directions" deep link into Google Maps |
+| Screen | File | Notes | Screenshot |
+|---|---|---|---|
+| Login | `ui/screens/LoginScreen.kt` | Google SSO + biometric sign-in entry points (stubbed) |<img width="383" height="792" alt="Screenshot 2026-09-22 085823" src="https://github.com/user-attachments/assets/a605c62f-4afd-4178-931c-7a973e12ae46" />|
+
+| Role select | `ui/screens/RoleSelectScreen.kt` | Choose Student / Company — same screen serves both |<img width="385" height="788" alt="Screenshot 2026-09-22 091557" src="https://github.com/user-attachments/assets/6cd638d2-c183-46c5-8275-5c8d8f2dd2f2" />|
+
+| Discover | `ui/screens/DiscoverScreen.kt` | Draggable swipe-card stack (`ui/components/SwipeCardStack.kt`) |<img width="391" height="791" alt="Screenshot 2026-09-22 085927" src="https://github.com/user-attachments/assets/ca096d9c-b378-4987-9063-ecfc93e49a55" />|
+
+| Matches | `ui/screens/MatchesScreen.kt` | List of mutual matches with unread indicator |<img width="378" height="792" alt="Screenshot 2026-09-22 092543" src="https://github.com/user-attachments/assets/485f99cf-680d-43fc-92f0-fbcc1187620c" />|
+
+| Chat | `ui/screens/ChatDetailScreen.kt` | Per-match conversation, local send |<img width="378" height="792" alt="Screenshot 2026-09-22 092543" src="https://github.com/user-attachments/assets/49d78bbd-9b5b-4077-aee6-51c5b0a22756" />|
+
+| Profile | `ui/screens/ProfileScreen.kt` | Adapts content to Student vs Company account type |<img width="373" height="791" alt="Screenshot 2026-09-22 092620" src="https://github.com/user-attachments/assets/ce04fc50-fdf2-4f8e-a9ce-43ff0f57b821" />|
+
+| **Settings** | `ui/screens/SettingsScreen.kt` | **20-mark deliverable — see below** |<img width="384" height="796" alt="Screenshot 2026-09-22 090826" src="https://github.com/user-attachments/assets/f96ef047-fbf5-4dbe-bf12-9cd081e3e0d5" />|
+
+| Jobs near you | `ui/screens/NearbyJobsScreen.kt` | Google Map + distance-sorted list, from Discover's "Near you" button (student view) |<img width="267" height="537" alt="Screenshot 2026-09-22 135603" src="https://github.com/user-attachments/assets/2b6a4b42-5571-456e-ab45-c7bb3c9a330c" />|
+
+| Job location | `ui/screens/JobLocationScreen.kt` | Single job on a map with a "Get directions" deep link into Google Maps | <img width="275" height="537" alt="image" src="https://github.com/user-attachments/assets/99566277-a37b-441c-9f47-017bf42e5ff6" />|
+
 
 ## Settings menu (Application State requirement)
 
@@ -40,11 +56,17 @@ preferences via a dedicated settings menu" requirement:
 - **Account type** — Student / Company toggle (shared UI, drives Discover + Profile content)
 - **Notifications** — push master switch, match alerts, message alerts
 - **Privacy** — profile visibility toggle
+- **Language** - change language of the application
 - **Appearance** — Light / Dark / Match system theme, applied live via `SwipeHireTheme`
 - **Security** — biometric lock toggle (UI hook — wire to `BiometricPrompt` once auth lands)
 - **Log out**
 
-## Google Maps setup (required to run)
+
+## Project Startup Instructions
+Download the APK to a mobile device for the fully functional mobile app. If trying to run in Android Studio, the project will work, except for the interactive maps
+as the API Key is not included in GitHub. Hence, we suggest downloading the APK onto a mobile device for a better experience. 
+
+
 
 
 ## Stack
@@ -56,26 +78,27 @@ preferences via a dedicated settings menu" requirement:
 - Maps Compose + Play Services Location for job locations and "Jobs near you"
 
 
-## REST API Endpoints
+## Cloud Hosted REST API Endpoints
+
 | Method | Endpoint | Description |
 |---|---|---|
-| **GET** | `/api/jobs` | Fetches the full list of job postings to populate the student swipe feed and map views |
-| **POST** | `/api/jobs` | Creates a new job posting for hiring companies |
-| **DELETE** | `/api/jobs/{id}` | Deletes an existing job posting by its unique ID |
-| **GET** | `/api/companies/{companyId}/jobs` | List a company’s jobs |
-| **POST** | `/api/companies` | Registers a new company profile |
-| **PUT** | `/api/companies/{id}` | Updates company details, location, and industry information |
-| **GET** | `/api/students` | Fetches student profiles to populate the company candidate swipe feed |
-| **POST** | `/api/students` | Registers a new student profile during initial onboarding |
-| **PUT** | `/api/students/{id}` | Updates an existing student's profile information, skills, and blurb |
-| **GET** | `/api/swipes/{userId}` | Get previously swiped IDs |
-| **POST** | `/api/swipes` | Records a swipe action between users/jobs and determines if a mutual match occurred |
-| **DELETE** | `/api/swipes` | Undo a swipe; takes `userId`, `targetId`, and `targetUserId` as query parameters |
-| **GET** | `/api/users/{userId}/saved` | Get saved jobs and students |
-| **PUT** | `/api/users/{userId}/saved/{kind}/{itemId}` | Save or unsave an item; `kind` is `job` or `student` |
-| **GET** | `/api/users/{userId}/settings` | Get account settings |
-| **PUT** | `/api/users/{userId}/settings` | Update account settings |
-| **POST** | `/api/location/geocode` | Convert an address to coordinates |
+| 🟢 `GET` | `/api/jobs` | Fetches the full list of job postings to populate the student swipe feed and map views |
+| 🔵 `POST` | `/api/jobs` | Creates a new job posting for hiring companies |
+| 🔴 `DELETE` | `/api/jobs/{id}` | Deletes an existing job posting by its unique ID |
+| 🟢 `GET` | `/api/companies/{companyId}/jobs` | List a company’s jobs |
+| 🔵 `POST` | `/api/companies` | Registers a new company profile |
+| 🟡 `PUT` | `/api/companies/{id}` | Updates company details, location, and industry information |
+| 🟢 `GET` | `/api/students` | Fetches student profiles to populate the company candidate swipe feed |
+| 🔵 `POST` | `/api/students` | Registers a new student profile during initial onboarding |
+| 🟡 `PUT` | `/api/students/{id}` | Updates an existing student's profile information, skills, and blurb |
+| 🟢 `GET` | `/api/swipes/{userId}` | Get previously swiped IDs |
+| 🔵 `POST` | `/api/swipes` | Records a swipe action between users/jobs and determines if a mutual match occurred |
+| 🔴 `DELETE` | `/api/swipes` | Undo a swipe; takes `userId`, `targetId`, and `targetUserId` as query parameters |
+| 🟢 `GET` | `/api/users/{userId}/saved` | Get saved jobs and students |
+| 🟡 `PUT` | `/api/users/{userId}/saved/{kind}/{itemId}` | Save or unsave an item; `kind` is `job` or `student` |
+| 🟢 `GET` | `/api/users/{userId}/settings` | Get account settings |
+| 🟡 `PUT` | `/api/users/{userId}/settings` | Update account settings |
+| 🔵 `POST` | `/api/location/geocode` | Convert an address to coordinates |
 
 ## GitHub Workflows (proof that they worked)
 <img width="1880" height="762" alt="image" src="https://github.com/user-attachments/assets/3e4491ba-aab5-49aa-9ac8-805200c05e46" />
