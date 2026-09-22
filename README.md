@@ -95,7 +95,7 @@ The following three features were described in the Part 1 planning document and 
 
 3. Chat and in-app alerts: Matched students and companies can exchange messages in a private conversation. The app also displays alerts for activity such as new matches and messages.
 
-## Feature Added After Lecturer Feedback
+Feature Added After Lecturer Feedback:
 
 Maps, geocoding and jobs near you: In response to lecturer feedback, we added location-based job discovery. The API converts a job’s work address into map coordinates. Students can view job markers on Google Maps, see jobs ordered by distance from their location and open directions to a job.
 
