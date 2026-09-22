@@ -1,4 +1,4 @@
-# SwipeHire — Android Frontend (Part 2 Prototype)
+# SwipeHire — PROG7314 POE Part 2 
 
 Native Kotlin + Jetpack Compose frontend for **SwipeHire**, the reverse job-matching app from the
 PROG7314 Part 1 design where companies swipe on student profiles, students swipe on job postings,
@@ -103,7 +103,8 @@ Android Unit Tests:
 
 ## Contributors of the Project 
 #### Public Repository (this excludes the contribution of *this Classroom50 repository)
-<img width="1137" height="576" alt="image" src="https://github.com/user-attachments/assets/e4e0bccc-a0ce-496d-80d2-a5c908988a82" />
+<img width="1125" height="571" alt="image" src="https://github.com/user-attachments/assets/19fe1c59-5707-4400-9413-9a10d27eeb04" />
+
 
 
 
