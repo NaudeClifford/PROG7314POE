@@ -28,21 +28,13 @@ https://github.com/VanNiekerkJoe/SwipeHire.git
 | Screen | File | Notes | Screenshot |
 |---|---|---|---|
 | Login | `ui/screens/LoginScreen.kt` | Google SSO + biometric sign-in entry points (stubbed) |<img width="383" height="792" alt="Screenshot 2026-09-22 085823" src="https://github.com/user-attachments/assets/a605c62f-4afd-4178-931c-7a973e12ae46" />|
-
 | Role select | `ui/screens/RoleSelectScreen.kt` | Choose Student / Company — same screen serves both |<img width="385" height="788" alt="Screenshot 2026-09-22 091557" src="https://github.com/user-attachments/assets/6cd638d2-c183-46c5-8275-5c8d8f2dd2f2" />|
-
 | Discover | `ui/screens/DiscoverScreen.kt` | Draggable swipe-card stack (`ui/components/SwipeCardStack.kt`) |<img width="391" height="791" alt="Screenshot 2026-09-22 085927" src="https://github.com/user-attachments/assets/ca096d9c-b378-4987-9063-ecfc93e49a55" />|
-
 | Matches | `ui/screens/MatchesScreen.kt` | List of mutual matches with unread indicator |<img width="378" height="792" alt="Screenshot 2026-09-22 092543" src="https://github.com/user-attachments/assets/485f99cf-680d-43fc-92f0-fbcc1187620c" />|
-
 | Chat | `ui/screens/ChatDetailScreen.kt` | Per-match conversation, local send |<img width="378" height="792" alt="Screenshot 2026-09-22 092543" src="https://github.com/user-attachments/assets/49d78bbd-9b5b-4077-aee6-51c5b0a22756" />|
-
 | Profile | `ui/screens/ProfileScreen.kt` | Adapts content to Student vs Company account type |<img width="373" height="791" alt="Screenshot 2026-09-22 092620" src="https://github.com/user-attachments/assets/ce04fc50-fdf2-4f8e-a9ce-43ff0f57b821" />|
-
 | **Settings** | `ui/screens/SettingsScreen.kt` | **20-mark deliverable — see below** |<img width="384" height="796" alt="Screenshot 2026-09-22 090826" src="https://github.com/user-attachments/assets/f96ef047-fbf5-4dbe-bf12-9cd081e3e0d5" />|
-
 | Jobs near you | `ui/screens/NearbyJobsScreen.kt` | Google Map + distance-sorted list, from Discover's "Near you" button (student view) |<img width="267" height="537" alt="Screenshot 2026-09-22 135603" src="https://github.com/user-attachments/assets/2b6a4b42-5571-456e-ab45-c7bb3c9a330c" />|
-
 | Job location | `ui/screens/JobLocationScreen.kt` | Single job on a map with a "Get directions" deep link into Google Maps | <img width="275" height="537" alt="image" src="https://github.com/user-attachments/assets/99566277-a37b-441c-9f47-017bf42e5ff6" />|
 
 
