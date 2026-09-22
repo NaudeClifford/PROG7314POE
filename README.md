@@ -85,6 +85,19 @@ Demo login details (Company):
 - Custom gesture-driven swipe card stack (no third-party swipe library)
 - Maps Compose + Play Services Location for job locations and "Jobs near you"
 
+## Main Features
+
+The following three features were described in the Part 1 planning document and implemented in SwipeHire:
+
+1. Profiles and CVs: Students can create and edit profiles containing their course, study year and skills, upload a PDF CV and view a profile strength score. Companies can create profiles describing their industry and hiring needs.
+
+2. Swipe-based discovery and matching: Students browse job postings while companies browse student profiles. The app highlights overlapping skills, records each decision and creates a match when both sides express interest.
+
+3. Chat and in-app alerts: Matched students and companies can exchange messages in a private conversation. The app also displays alerts for activity such as new matches and messages.
+
+## Feature Added After Lecturer Feedback
+
+Maps, geocoding and jobs near you: In response to lecturer feedback, we added location-based job discovery. The API converts a job’s work address into map coordinates. Students can view job markers on Google Maps, see jobs ordered by distance from their location and open directions to a job.
 
 ## Cloud Hosted REST API Endpoints
 
