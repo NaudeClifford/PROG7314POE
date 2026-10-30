@@ -71,6 +71,22 @@ service cloud.firestore {
           request.auth.uid in request.resource.data.readBy;
         allow delete: if false;
       }
+
+      // --- THIS IS THE NEW RULE YOU NEEDED FOR FEATURE 4 & 5 ---
+      match /interviews/{interviewId} {
+        allow read: if isMatchParticipant(matchId);
+        allow create: if isMatchParticipant(matchId)
+          && request.resource.data.proposedBy == request.auth.uid
+          && request.resource.data.status == 'PROPOSED';
+        allow update: if isMatchParticipant(matchId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','respondedAt'])
+          && ((request.auth.uid != resource.data.proposedBy
+                && request.resource.data.status in ['ACCEPTED','DECLINED'])
+           || (request.auth.uid == resource.data.proposedBy
+                && request.resource.data.status == 'CANCELLED'));
+        allow delete: if false;
+      }
+      // ---------------------------------------------------------
     }
 
     match /notifications/{notificationId} {
