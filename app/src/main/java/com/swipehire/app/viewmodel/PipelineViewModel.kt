@@ -22,11 +22,9 @@ data class PipelineUiState(
     val stage: PipelineStage = PipelineStage.MATCHED,
     val interviews: List<Interview> = emptyList(),
     val busy: Boolean = false,
-    /** English message (a `tr()` key) for the last failed action, or null. */
     val error: String? = null
 )
 
-/** Drives the pipeline panel inside the chat screen. */
 class PipelineViewModel(
     private val repository: PipelineRepository = PipelineRepository()
 ) : ViewModel() {
@@ -39,7 +37,6 @@ class PipelineViewModel(
     private var observing: Job? = null
     private var observedMatchId: String? = null
 
-    /** Starts (or restarts) live observation of [matchId]. Safe to call on every recomposition key change. */
     fun start(matchId: String, userId: String) {
         if (observedMatchId == matchId && observing?.isActive == true) return
         observing?.cancel()
@@ -57,7 +54,6 @@ class PipelineViewModel(
 
     fun clearError() = _state.update { it.copy(error = null) }
 
-    /** [onResult] receives an error key to show, or null on success. */
     fun propose(
         matchId: String, userId: String, startAtMillis: Long,
         durationMinutes: Int, mode: InterviewMode, note: String, onResult: (String?) -> Unit
