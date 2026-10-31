@@ -113,6 +113,7 @@ fun SwipeHireApp(settingsViewModel: SettingsViewModel = viewModel()) {
                             navController.navigate(if (role == null) Routes.ROLE_SELECT else Routes.DISCOVER) { popUpTo(0) }
                         }
                     },
+                    biometricEnabled = settingsState.biometricLock,
                     onUseBiometric = {
                         settingsViewModel.resolveSignedInAccount { role ->
                             navController.navigate(if (role == null) Routes.ROLE_SELECT else Routes.DISCOVER) { popUpTo(0) }
