@@ -16,6 +16,24 @@ service cloud.firestore {
         get(/databases/$(database)/documents/matches/$(matchId)).data.mutual == true;
     }
 
+    function currentRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function validPipelineUpdate() {
+      let from = resource.data.get('stage', 'MATCHED');
+      let to = request.resource.data.stage;
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return changed.hasOnly(['stage', 'stageUpdatedAt']) &&
+        request.resource.data.stageUpdatedAt == request.time &&
+        (
+          (from == 'MATCHED' && to == 'INTERVIEW') ||
+          (currentRole() == 'COMPANY' && from == 'INTERVIEW' && to == 'OFFER') ||
+          (currentRole() == 'STUDENT' && from == 'OFFER' && to == 'HIRED') ||
+          (from in ['MATCHED', 'INTERVIEW', 'OFFER'] && to == 'DECLINED')
+        );
+    }
+
     match /users/{userId} {
       allow read, create, update, delete: if isCurrentUser(userId);
     }
@@ -58,7 +76,12 @@ service cloud.firestore {
       allow create: if signedIn() && request.auth.uid in request.resource.data.participantIds &&
         request.resource.data.mutual == true;
       allow update: if signedIn() && request.auth.uid in resource.data.participantIds &&
-        resource.data.mutual == true;
+        resource.data.mutual == true &&
+        (
+          request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['lastMessage', 'lastMessageAt', 'unreadBy']) ||
+          validPipelineUpdate()
+        );
       allow delete: if false;
 
       match /messages/{messageId} {
@@ -72,21 +95,31 @@ service cloud.firestore {
         allow delete: if false;
       }
 
-      // --- THIS IS THE NEW RULE YOU NEEDED FOR FEATURE 4 & 5 ---
       match /interviews/{interviewId} {
         allow read: if isMatchParticipant(matchId);
         allow create: if isMatchParticipant(matchId)
+          && currentRole() == 'COMPANY'
           && request.resource.data.proposedBy == request.auth.uid
-          && request.resource.data.status == 'PROPOSED';
+          && request.resource.data.status == 'PROPOSED'
+          && request.resource.data.startAt is timestamp
+          && request.resource.data.startAt >= request.time + duration.value(1, 'h')
+          && request.resource.data.durationMinutes is int
+          && request.resource.data.durationMinutes >= 15
+          && request.resource.data.durationMinutes <= 120
+          && request.resource.data.mode in ['IN_PERSON', 'VIDEO', 'PHONE']
+          && request.resource.data.note is string
+          && request.resource.data.note.size() <= 200;
         allow update: if isMatchParticipant(matchId)
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','respondedAt'])
+          && request.resource.data.respondedAt == request.time
           && ((request.auth.uid != resource.data.proposedBy
+                && resource.data.status == 'PROPOSED'
                 && request.resource.data.status in ['ACCEPTED','DECLINED'])
            || (request.auth.uid == resource.data.proposedBy
+                && resource.data.status in ['PROPOSED','ACCEPTED']
                 && request.resource.data.status == 'CANCELLED'));
         allow delete: if false;
       }
-      // ---------------------------------------------------------
     }
 
     match /notifications/{notificationId} {
