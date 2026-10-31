@@ -63,6 +63,8 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.swipehire.app.R
+import com.swipehire.app.security.BiometricAuthenticator
+import com.swipehire.app.security.findFragmentActivity
 import com.swipehire.app.ui.theme.Violet40
 import com.swipehire.app.ui.theme.auroraMesh
 import com.swipehire.app.ui.tr
@@ -72,6 +74,7 @@ import kotlinx.coroutines.tasks.await
 @Composable
 fun LoginScreen(
     onAuthenticated: () -> Unit,
+    biometricEnabled: Boolean,
     onUseBiometric: () -> Unit
 ) {
     val context = LocalContext.current
@@ -83,6 +86,32 @@ fun LoginScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var infoMessage by remember { mutableStateOf<String?>(null) }
+    val biometricTitle = tr("Unlock SwipeHire")
+    val biometricSubtitle = tr("Confirm your fingerprint or face to continue")
+    val cancelText = tr("Cancel")
+
+    fun startBiometricSignIn() {
+        if (!biometricEnabled) {
+            errorMessage = "Enable biometric lock in Settings after signing in first."
+            return
+        }
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            errorMessage = "Sign in with Google or email once before using biometrics."
+            return
+        }
+        val activity = context.findFragmentActivity()
+        if (activity == null) {
+            errorMessage = "Biometric authentication could not be opened."
+            return
+        }
+        BiometricAuthenticator(activity).authenticate(
+            title = biometricTitle,
+            subtitle = biometricSubtitle,
+            cancelText = cancelText,
+            onSuccess = onUseBiometric,
+            onError = { errorMessage = it }
+        )
+    }
 
     fun startGoogleSignIn() {
         scope.launch {
@@ -204,7 +233,7 @@ fun LoginScreen(
             Spacer(Modifier.height(14.dp))
             Text("SwipeHire", color = Color.White, style = MaterialTheme.typography.displaySmall, textAlign = TextAlign.Center)
             Text(
-                "Swipe your way to the right opportunity — or the right graduate.",
+                tr("Swipe your way to the right opportunity — or the right graduate."),
                 color = Color.White.copy(alpha = 0.82f),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center
@@ -303,7 +332,7 @@ fun LoginScreen(
                     }
 
                     OutlinedButton(
-                        onClick = onUseBiometric,
+                        onClick = ::startBiometricSignIn,
                         enabled = !busy,
                         modifier = Modifier.fillMaxWidth().height(48.dp),
                         shape = RoundedCornerShape(16.dp),
@@ -318,15 +347,15 @@ fun LoginScreen(
 
             errorMessage?.let {
                 Spacer(Modifier.height(10.dp))
-                Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+                Text(tr(it), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
             }
             infoMessage?.let {
                 Spacer(Modifier.height(10.dp))
-                Text(it, color = Color.White, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+                Text(tr(it), color = Color.White, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
             }
             Spacer(Modifier.height(12.dp))
             Text(
-                "By continuing you agree to SwipeHire's Terms & Privacy Policy.",
+                tr("By continuing you agree to SwipeHire's Terms & Privacy Policy."),
                 color = Color.White.copy(alpha = 0.55f),
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center
@@ -339,7 +368,7 @@ private fun friendlyAuthError(error: Exception): String = when (error) {
     is FirebaseAuthWeakPasswordException -> "Choose a stronger password with at least 6 characters."
     is FirebaseAuthUserCollisionException -> "An account already exists for this email. Sign in instead."
     is FirebaseAuthInvalidCredentialsException -> "The email or password is incorrect."
-    is FirebaseNetworkException -> "Network connection failed. Check the emulator's internet connection."
+    is FirebaseNetworkException -> "Network connection failed. Check your internet connection."
     is FirebaseAuthException -> when (error.errorCode) {
         "ERROR_OPERATION_NOT_ALLOWED" -> "Email/password login is not enabled in Firebase Console."
         "ERROR_TOO_MANY_REQUESTS" -> "Too many attempts. Wait a moment and try again."

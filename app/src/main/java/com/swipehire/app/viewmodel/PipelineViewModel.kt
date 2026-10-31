@@ -77,8 +77,8 @@ class PipelineViewModel(
         launchAction("cancel") { repository.cancelInterview(matchId, interviewId, userId) }
 
     fun moveTo(matchId: String, userId: String, newStage: PipelineStage) {
-        val role = _state.value.role ?: return
-        launchAction("moveTo") { repository.updateStage(matchId, userId, role, newStage) }
+        if (_state.value.role == null) return
+        launchAction("moveTo") { repository.updateStage(matchId, userId, newStage) }
     }
 
     private fun launchAction(action: String, onResult: ((String?) -> Unit)? = null, block: suspend () -> Boolean) {

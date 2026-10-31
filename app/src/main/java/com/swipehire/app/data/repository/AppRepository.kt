@@ -22,11 +22,13 @@ import com.swipehire.app.data.remote.SwipeResponse
 import com.swipehire.app.data.remote.SavedItemsDto
 import com.swipehire.app.data.remote.SetSavedItemRequest
 import com.swipehire.app.data.remote.UserSettingsDto
+import com.swipehire.app.offline.OfflineSyncManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CancellationException
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.UnknownHostException
+import java.io.IOException
 
 class GeocodingRateLimitedException : Exception()
 
@@ -42,7 +44,8 @@ class AppRepository {
     }
 
     private fun isDefinitelyOffline(error: Exception): Boolean =
-        error is ConnectException || error is UnknownHostException
+        error is ConnectException || error is UnknownHostException ||
+            (error is IOException && error !is HttpException)
 
     private suspend fun <T> writeWithOfflineFallback(
         operation: String,
@@ -268,19 +271,43 @@ class AppRepository {
         }
 
     suspend fun getSavedItems(userId: String): SavedItemsDto? {
+        if (!OfflineSyncManager.isNetworkAvailable()) {
+            return OfflineSyncManager.cachedSavedItems(userId)
+        }
         return try {
-            api.getSavedItems(userId)
-        } catch (e: Exception) {
-            firestoreRepository.getSavedItems(userId)
+            api.getSavedItems(userId).also { OfflineSyncManager.cacheSavedItems(userId, it) }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
+            val firestore = firestoreRepository.getSavedItems(userId)
+            if (firestore != null) {
+                OfflineSyncManager.cacheSavedItems(userId, firestore)
+                firestore
+            } else {
+                OfflineSyncManager.cachedSavedItems(userId)
+            }
         }
     }
 
-    suspend fun setSavedItem(userId: String, kind: String, itemId: String, saved: Boolean): SavedItemsDto? =
-        writeWithOfflineFallback("setSavedItem", {
-            api.setSavedItem(userId, kind, itemId, SetSavedItemRequest(saved))
-        }) {
-            firestoreRepository.setSavedItem(userId, kind, itemId, saved)
+    suspend fun setSavedItem(userId: String, kind: String, itemId: String, saved: Boolean): SavedItemsDto? {
+        if (!OfflineSyncManager.isNetworkAvailable()) {
+            return OfflineSyncManager.enqueueSavedItem(userId, kind, itemId, saved)
         }
+        return try {
+            api.setSavedItem(userId, kind, itemId, SetSavedItemRequest(saved))
+                .also { OfflineSyncManager.cacheSavedItems(userId, it) }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
+            if (isDefinitelyOffline(error)) {
+                logApiFallback("setSavedItem", error)
+                OfflineSyncManager.enqueueSavedItem(userId, kind, itemId, saved)
+            } else {
+                Log.w("SwipeHireApi", "setSavedItem failed (${error.javaClass.simpleName})")
+                null
+            }
+        }
+    }
 
     suspend fun getUserSettings(userId: String): UserSettingsDto? {
         return try {
@@ -290,8 +317,24 @@ class AppRepository {
         }
     }
 
-    suspend fun updateUserSettings(userId: String, settings: UserSettingsDto): UserSettingsDto? =
-        writeWithOfflineFallback("updateUserSettings", { api.updateUserSettings(userId, settings) }) {
-            firestoreRepository.updateUserSettings(userId, settings)
+    suspend fun updateUserSettings(userId: String, settings: UserSettingsDto): UserSettingsDto? {
+        if (!OfflineSyncManager.isNetworkAvailable()) {
+            OfflineSyncManager.enqueueSettings(userId, settings)
+            return settings
         }
+        return try {
+            api.updateUserSettings(userId, settings)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
+            if (isDefinitelyOffline(error)) {
+                logApiFallback("updateUserSettings", error)
+                OfflineSyncManager.enqueueSettings(userId, settings)
+                settings
+            } else {
+                Log.w("SwipeHireApi", "updateUserSettings failed (${error.javaClass.simpleName})")
+                null
+            }
+        }
+    }
 }

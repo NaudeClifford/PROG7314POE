@@ -107,9 +107,17 @@ class PipelineRepository {
         val firestore = db ?: return false
         return try {
             val matchRef = firestore.collection("matches").document(matchId)
-            val other = otherParticipant(matchRef.get().await(), proposerId) ?: return false
-            matchRef.collection("interviews").add(
-                mapOf(
+            val interviewRef = matchRef.collection("interviews").document()
+            val notificationRef = firestore.collection("notifications").document()
+            firestore.runTransaction { transaction ->
+                val match = transaction.get(matchRef)
+                val role = transaction.get(firestore.collection("users").document(proposerId)).getString("role")
+                check(role == AccountType.COMPANY.name) { "Only a company may propose an interview." }
+                val other = otherParticipant(match, proposerId)
+                    ?: error("The proposer is not a match participant.")
+                transaction.set(
+                    interviewRef,
+                    mapOf(
                     "proposedBy" to proposerId,
                     "startAt" to Timestamp(Date(startAtMillis)),
                     "durationMinutes" to durationMinutes,
@@ -117,10 +125,20 @@ class PipelineRepository {
                     "note" to note.trim().take(200),
                     "status" to InterviewStatus.PROPOSED.name,
                     "createdAt" to FieldValue.serverTimestamp()
+                    )
                 )
-            ).await()
-            notify(other, proposerId, AlertType.INTERVIEW, "Interview proposed",
-                describeSlot(startAtMillis, mode), matchId)
+                transaction.set(
+                    notificationRef,
+                    notificationData(
+                        other,
+                        proposerId,
+                        AlertType.INTERVIEW,
+                        "Interview proposed",
+                        describeSlot(startAtMillis, mode),
+                        matchId
+                    )
+                )
+            }.await()
             Log.d(TAG, "Interview proposed on match $matchId")
             true
         } catch (e: CancellationException) {
@@ -136,25 +154,43 @@ class PipelineRepository {
         return try {
             val matchRef = firestore.collection("matches").document(matchId)
             val ref = matchRef.collection("interviews").document(interviewId)
-            val snapshot = ref.get().await()
-            val interview = snapshot.toInterview(matchId) ?: return false
-            if (interview.proposedBy == responderId || interview.status != InterviewStatus.PROPOSED) {
-                Log.w(TAG, "respondToInterview ignored: not allowed in current state")
-                return false
-            }
+            val notificationRef = firestore.collection("notifications").document()
             val newStatus = if (accept) InterviewStatus.ACCEPTED else InterviewStatus.DECLINED
-            ref.update(mapOf("status" to newStatus.name, "respondedAt" to FieldValue.serverTimestamp())).await()
-            if (accept) {
-                val current = PipelineStage.fromName(matchRef.get().await().getString("stage"))
-                val next = PipelineRules.stageAfterInterviewAccepted(current)
-                if (next != current) {
-                    matchRef.update(mapOf("stage" to next.name, "stageUpdatedAt" to FieldValue.serverTimestamp())).await()
-                    Log.d(TAG, "Match $matchId advanced to $next after accepted interview")
+            firestore.runTransaction { transaction ->
+                val interview = transaction.get(ref).toInterview(matchId)
+                    ?: error("Interview not found.")
+                val match = transaction.get(matchRef)
+                val participants = (match.get("participantIds") as? List<*>)?.filterIsInstance<String>().orEmpty()
+                check(responderId in participants) { "Responder is not a match participant." }
+                check(interview.proposedBy != responderId && interview.status == InterviewStatus.PROPOSED) {
+                    "Interview cannot be answered in its current state."
                 }
-            }
-            notify(interview.proposedBy, responderId, AlertType.INTERVIEW,
-                if (accept) "Interview accepted" else "Interview declined",
-                describeSlot(interview.startAtMillis, interview.mode), matchId)
+                transaction.update(
+                    ref,
+                    mapOf("status" to newStatus.name, "respondedAt" to FieldValue.serverTimestamp())
+                )
+                if (accept) {
+                    val current = PipelineStage.fromName(match.getString("stage"))
+                    val next = PipelineRules.stageAfterInterviewAccepted(current)
+                    if (next != current) {
+                        transaction.update(
+                            matchRef,
+                            mapOf("stage" to next.name, "stageUpdatedAt" to FieldValue.serverTimestamp())
+                        )
+                    }
+                }
+                transaction.set(
+                    notificationRef,
+                    notificationData(
+                        interview.proposedBy,
+                        responderId,
+                        AlertType.INTERVIEW,
+                        if (accept) "Interview accepted" else "Interview declined",
+                        describeSlot(interview.startAtMillis, interview.mode),
+                        matchId
+                    )
+                )
+            }.await()
             Log.d(TAG, "Interview $interviewId -> $newStatus")
             true
         } catch (e: CancellationException) {
@@ -170,18 +206,33 @@ class PipelineRepository {
         return try {
             val matchRef = firestore.collection("matches").document(matchId)
             val ref = matchRef.collection("interviews").document(interviewId)
-            val interview = ref.get().await().toInterview(matchId) ?: return false
-            if (interview.proposedBy != actorId ||
-                (interview.status != InterviewStatus.PROPOSED && interview.status != InterviewStatus.ACCEPTED)
-            ) {
-                Log.w(TAG, "cancelInterview ignored: not allowed in current state")
-                return false
-            }
-            ref.update(mapOf("status" to InterviewStatus.CANCELLED.name, "respondedAt" to FieldValue.serverTimestamp())).await()
-            otherParticipant(matchRef.get().await(), actorId)?.let {
-                notify(it, actorId, AlertType.INTERVIEW, "Interview cancelled",
-                    describeSlot(interview.startAtMillis, interview.mode), matchId)
-            }
+            val notificationRef = firestore.collection("notifications").document()
+            firestore.runTransaction { transaction ->
+                val interview = transaction.get(ref).toInterview(matchId)
+                    ?: error("Interview not found.")
+                val match = transaction.get(matchRef)
+                check(
+                    interview.proposedBy == actorId &&
+                        interview.status in setOf(InterviewStatus.PROPOSED, InterviewStatus.ACCEPTED)
+                ) { "Interview cannot be cancelled in its current state." }
+                val other = otherParticipant(match, actorId)
+                    ?: error("The actor is not a match participant.")
+                transaction.update(
+                    ref,
+                    mapOf("status" to InterviewStatus.CANCELLED.name, "respondedAt" to FieldValue.serverTimestamp())
+                )
+                transaction.set(
+                    notificationRef,
+                    notificationData(
+                        other,
+                        actorId,
+                        AlertType.INTERVIEW,
+                        "Interview cancelled",
+                        describeSlot(interview.startAtMillis, interview.mode),
+                        matchId
+                    )
+                )
+            }.await()
             Log.d(TAG, "Interview $interviewId cancelled")
             true
         } catch (e: CancellationException) {
@@ -192,21 +243,47 @@ class PipelineRepository {
     }
 
     /** Moves the match to [newStage] if [role] is allowed to make that transition from the stored stage. */
-    suspend fun updateStage(matchId: String, actorId: String, role: AccountType, newStage: PipelineStage): Boolean {
+    suspend fun updateStage(matchId: String, actorId: String, newStage: PipelineStage): Boolean {
         val firestore = db ?: return false
         return try {
             val matchRef = firestore.collection("matches").document(matchId)
-            val snapshot = matchRef.get().await()
-            val current = PipelineStage.fromName(snapshot.getString("stage"))
-            if (!PipelineRules.canMove(role, current, newStage)) {
-                Log.w(TAG, "Blocked stage change $current -> $newStage for $role")
-                return false
-            }
-            matchRef.update(mapOf("stage" to newStage.name, "stageUpdatedAt" to FieldValue.serverTimestamp())).await()
-            otherParticipant(snapshot, actorId)?.let {
-                notify(it, actorId, AlertType.STAGE, "Application status updated", newStage.label, matchId)
-            }
-            Log.d(TAG, "Match $matchId stage $current -> $newStage by $role")
+            val notificationRef = firestore.collection("notifications").document()
+            var previousStage = PipelineStage.MATCHED
+            var verifiedRole = AccountType.STUDENT
+            firestore.runTransaction { transaction ->
+                val match = transaction.get(matchRef)
+                val roleName = transaction.get(firestore.collection("users").document(actorId)).getString("role")
+                val role = AccountType.entries.firstOrNull { it.name == roleName }
+                    ?: error("User role is not configured.")
+                val participants = (match.get("participantIds") as? List<*>)?.filterIsInstance<String>().orEmpty()
+                check(actorId in participants && match.getBoolean("mutual") == true) {
+                    "Only mutual-match participants may update the pipeline."
+                }
+                val current = PipelineStage.fromName(match.getString("stage"))
+                check(PipelineRules.canMove(role, current, newStage)) {
+                    "Pipeline transition is not permitted for this role."
+                }
+                val other = otherParticipant(match, actorId)
+                    ?: error("The actor is not a match participant.")
+                previousStage = current
+                verifiedRole = role
+                transaction.update(
+                    matchRef,
+                    mapOf("stage" to newStage.name, "stageUpdatedAt" to FieldValue.serverTimestamp())
+                )
+                transaction.set(
+                    notificationRef,
+                    notificationData(
+                        other,
+                        actorId,
+                        AlertType.STAGE,
+                        "Application status updated",
+                        newStage.label,
+                        matchId
+                    )
+                )
+            }.await()
+            Log.d(TAG, "Match $matchId stage $previousStage -> $newStage by $verifiedRole")
             true
         } catch (e: CancellationException) {
             throw e
@@ -222,21 +299,16 @@ class PipelineRepository {
         SimpleDateFormat("d MMM yyyy, HH:mm", Locale.getDefault()).format(Date(startAtMillis)) + " · " + mode.label
 
     /** Same document shape as FirestoreRepository.createNotification so AlertsViewModel reads it unchanged. */
-    private suspend fun notify(
+    private fun notificationData(
         userId: String, actorId: String, type: AlertType, title: String, body: String, matchId: String
-    ) {
-        val firestore = db ?: return
-        firestore.collection("notifications").add(
-            mapOf(
-                "userId" to userId,
-                "actorId" to actorId,
-                "type" to type.name,
-                "title" to title,
-                "body" to body,
-                "matchId" to matchId,
-                "createdAt" to FieldValue.serverTimestamp(),
-                "read" to false
-            )
-        ).await()
-    }
+    ): Map<String, Any> = mapOf(
+        "userId" to userId,
+        "actorId" to actorId,
+        "type" to type.name,
+        "title" to title,
+        "body" to body,
+        "matchId" to matchId,
+        "createdAt" to FieldValue.serverTimestamp(),
+        "read" to false
+    )
 }

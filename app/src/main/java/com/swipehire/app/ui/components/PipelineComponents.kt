@@ -164,7 +164,7 @@ private fun actionLabel(role: AccountType, target: PipelineStage): String = when
 private val slotFormat get() = SimpleDateFormat("EEE, d MMM yyyy · HH:mm", Locale.getDefault())
 
 /** Opens the device calendar with the interview pre-filled. No calendar permission is needed. */
-private fun addToCalendar(context: Context, interview: Interview, withName: String) {
+private fun addToCalendar(context: Context, interview: Interview, withName: String, noCalendarMessage: String) {
     val intent = Intent(Intent.ACTION_INSERT).apply {
         data = CalendarContract.Events.CONTENT_URI
         putExtra(CalendarContract.Events.TITLE, "SwipeHire interview – $withName")
@@ -177,7 +177,7 @@ private fun addToCalendar(context: Context, interview: Interview, withName: Stri
         Log.d(TAG, "Opened calendar for interview ${interview.id}")
     } catch (e: Exception) {
         Log.w(TAG, "No calendar app available", e)
-        Toast.makeText(context, "No calendar app found", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, noCalendarMessage, Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -194,6 +194,7 @@ fun PipelinePanel(
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
+    val noCalendarMessage = tr("No calendar app found")
     var expanded by remember { mutableStateOf(false) }
     var showSchedule by remember { mutableStateOf(false) }
 
@@ -278,7 +279,7 @@ fun PipelinePanel(
                                 onAccept = { currentUserId?.let { viewModel.respond(matchId, interview.id, it, true) } },
                                 onDecline = { currentUserId?.let { viewModel.respond(matchId, interview.id, it, false) } },
                                 onCancel = { currentUserId?.let { viewModel.cancel(matchId, interview.id, it) } },
-                                onAddToCalendar = { addToCalendar(context, interview, otherName) }
+                                onAddToCalendar = { addToCalendar(context, interview, otherName, noCalendarMessage) }
                             )
                             Spacer(Modifier.height(8.dp))
                         }

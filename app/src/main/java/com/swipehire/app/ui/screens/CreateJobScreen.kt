@@ -85,14 +85,14 @@ fun CreateJobScreen(onBack: () -> Unit, onPublished: () -> Unit) {
         ) {
             Text(tr("Publish a role with a verified map location"), style = MaterialTheme.typography.titleLarge)
             Text(
-                "SwipeHire geocodes the work address through the custom REST API, stores the coordinates, and uses them for maps, directions, and nearby-job distances.",
+                tr("SwipeHire geocodes the work address through the custom REST API, stores the coordinates, and uses them for maps, directions, and nearby-job distances."),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             OutlinedTextField(company, {}, Modifier.fillMaxWidth(), label = { Text(tr("Company")) }, singleLine = true, readOnly = true)
             OutlinedTextField(role, { role = it }, Modifier.fillMaxWidth(), label = { Text(tr("Job title")) }, singleLine = true)
-            OutlinedTextField(location, { location = it }, Modifier.fillMaxWidth(), label = { Text("Area, city") }, placeholder = { Text("Sandton, Johannesburg") }, singleLine = true)
+            OutlinedTextField(location, { location = it }, Modifier.fillMaxWidth(), label = { Text(tr("Area, city")) }, placeholder = { Text("Sandton, Johannesburg") }, singleLine = true)
             OutlinedTextField(
                 address,
                 { address = it },
@@ -112,13 +112,13 @@ fun CreateJobScreen(onBack: () -> Unit, onPublished: () -> Unit) {
                     FilterChip(
                         selected = remoteType == type,
                         onClick = { remoteType = type },
-                        label = { Text(type.label) }
+                        label = { Text(tr(type.label)) }
                     )
                 }
             }
 
             message?.let {
-                Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                Text(tr(it), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
             }
 
             Spacer(Modifier.height(4.dp))

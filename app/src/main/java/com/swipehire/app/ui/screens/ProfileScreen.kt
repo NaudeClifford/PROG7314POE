@@ -248,7 +248,7 @@ fun ProfileScreen(
 
         saveMessage?.let {
             Spacer(Modifier.height(10.dp))
-            Text(it, color = accent, style = MaterialTheme.typography.bodySmall)
+            Text(tr(it), color = accent, style = MaterialTheme.typography.bodySmall)
         }
 
         Spacer(Modifier.height(24.dp))

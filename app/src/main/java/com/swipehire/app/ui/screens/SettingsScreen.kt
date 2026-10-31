@@ -25,6 +25,7 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,7 +42,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -52,6 +56,9 @@ import androidx.compose.ui.platform.LocalContext
 import com.swipehire.app.data.signOutFirebaseUser
 import com.swipehire.app.data.AccountType
 import com.swipehire.app.data.AppLanguage
+import com.swipehire.app.security.BiometricAuthenticator
+import com.swipehire.app.security.BiometricSession
+import com.swipehire.app.security.findFragmentActivity
 import com.swipehire.app.ui.tr
 import com.swipehire.app.ui.theme.Coral
 import com.swipehire.app.ui.theme.Mint40
@@ -71,8 +78,13 @@ fun SettingsScreen(
     onLoggedOut: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+    val pendingOfflineActions by viewModel.pendingOfflineActions.collectAsState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    var biometricError by remember { mutableStateOf<String?>(null) }
+    val biometricTitle = tr("Enable biometric lock")
+    val biometricSubtitle = tr("Confirm your fingerprint or face")
+    val biometricCancel = tr("Cancel")
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 24.dp)) {
         Row(
@@ -97,20 +109,20 @@ fun SettingsScreen(
         SettingsSection(title = tr("Notifications"), icon = Icons.Filled.NotificationsActive) {
             SwitchRow(
                 label = tr("Push notifications"),
-                subtitle = "Master switch for all SwipeHire alerts",
+                subtitle = tr("Master switch for all SwipeHire alerts"),
                 checked = state.pushNotifications,
                 onCheckedChange = { viewModel.setPushNotifications(it) }
             )
             SwitchRow(
                 label = tr("New match alerts"),
-                subtitle = "Get notified the moment there's a mutual match",
+                subtitle = tr("Get notified the moment there's a mutual match"),
                 checked = state.matchAlerts,
                 enabled = state.pushNotifications,
                 onCheckedChange = { viewModel.setMatchAlerts(it) }
             )
             SwitchRow(
                 label = tr("Message alerts"),
-                subtitle = "Get notified about new chat messages",
+                subtitle = tr("Get notified about new chat messages"),
                 checked = state.messageAlerts,
                 enabled = state.pushNotifications,
                 onCheckedChange = { viewModel.setMessageAlerts(it) }
@@ -121,8 +133,8 @@ fun SettingsScreen(
             SwitchRow(
                 label = tr("Profile visibility"),
                 subtitle = if (state.accountType == AccountType.STUDENT)
-                    "Let companies discover your profile while swiping" else
-                    "Let students discover your job postings while swiping",
+                    tr("Let companies discover your profile while swiping") else
+                    tr("Let students discover your job postings while swiping"),
                 checked = state.profileVisible,
                 onCheckedChange = { viewModel.setProfileVisible(it) }
             )
@@ -143,10 +155,56 @@ fun SettingsScreen(
         SettingsSection(title = tr("Security"), icon = Icons.Filled.Fingerprint) {
             SwitchRow(
                 label = tr("Biometric lock"),
-                subtitle = "Require fingerprint or face unlock to open SwipeHire",
+                subtitle = tr("Require fingerprint or face unlock to open SwipeHire"),
                 checked = state.biometricLock,
-                onCheckedChange = { viewModel.setBiometricLock(it) }
+                onCheckedChange = { enabled ->
+                    if (!enabled) {
+                        biometricError = null
+                        viewModel.setBiometricLock(false)
+                    } else {
+                        val activity = context.findFragmentActivity()
+                        if (activity == null) {
+                            biometricError = "Biometric authentication could not be opened."
+                        } else {
+                            BiometricAuthenticator(activity).authenticate(
+                                title = biometricTitle,
+                                subtitle = biometricSubtitle,
+                                cancelText = biometricCancel,
+                                onSuccess = {
+                                    BiometricSession.unlock()
+                                    biometricError = null
+                                    viewModel.setBiometricLock(true)
+                                },
+                                onError = { biometricError = it }
+                            )
+                        }
+                    }
+                }
             )
+            biometricError?.let {
+                Text(
+                    tr(it),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+        }
+
+        SettingsSection(title = tr("Offline synchronisation"), icon = Icons.Filled.Sync) {
+            Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+                Text(
+                    if (pendingOfflineActions == 0) tr("All offline changes are synchronised")
+                    else "$pendingOfflineActions ${tr("change(s) waiting to synchronise")}",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    tr("Saved items and settings are stored on this device and automatically synchronised when a connection returns."),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
         Spacer(Modifier.height(8.dp))
