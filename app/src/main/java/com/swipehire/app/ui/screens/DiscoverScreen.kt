@@ -333,7 +333,7 @@ private fun SearchAndFilterBar(
                 FilterChip(
                     selected = selectedRemote == type,
                     onClick = { onRemoteSelected(if (selectedRemote == type) null else type) },
-                    label = { Text(type.label) }
+                    label = { Text(tr(type.label)) }
                 )
             }
             item {
