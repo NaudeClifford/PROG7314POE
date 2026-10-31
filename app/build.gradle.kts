@@ -81,6 +81,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.biometric:biometric:1.2.0-alpha05")
+    implementation("androidx.fragment:fragment-ktx:1.8.2")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
 
     // Firebase BOM (Bill of Materials)
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
