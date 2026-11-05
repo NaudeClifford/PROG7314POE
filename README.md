@@ -151,9 +151,6 @@ Android Unit Tests:
 .NET API Build:
 <img width="1871" height="788" alt="image" src="https://github.com/user-attachments/assets/891d722a-f07c-4107-abc0-b0e1c0cad655" />
 
-## Contributors of the Project 
-#### Public Repository (this excludes the contribution of *this Classroom50 repository)
-<img width="1125" height="571" alt="image" src="https://github.com/user-attachments/assets/19fe1c59-5707-4400-9413-9a10d27eeb04" />
 
 ## Setup for Project
 
