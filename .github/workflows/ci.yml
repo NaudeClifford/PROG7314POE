@@ -2,52 +2,96 @@ name: CI
 
 on:
   push:
-    branches:
-      - master
-      - Features
   pull_request:
     branches:
       - master
-      - Features
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
 
 jobs:
-
   android:
-    name: Android Unit Tests
+    name: Android tests and build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Make Gradle executable
-        run: chmod +x ./gradlew
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
 
-      - name: Run Android unit tests
-        run: ./gradlew test
+      - name: Run Android unit tests and build
+        run: bash ./gradlew :app:testDebugUnitTest :app:assembleDebug --no-daemon
 
+      - name: Upload Android test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-test-results
+          path: app/build/test-results/testDebugUnitTest/**/*.xml
+          if-no-files-found: warn
+          retention-days: 14
 
   api:
-    name: .NET API Build
+    name: .NET API tests and build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up .NET
+      - name: Set up .NET 10
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
-      - name: Restore API
-        run: dotnet restore SwipeHire.Api/SwipeHire.Api/SwipeHire.Api.csproj --configfile NuGet.Config
+      - name: Restore API solution
+        run: dotnet restore SwipeHire.Api/SwipeHire.Api.slnx --configfile NuGet.Config
 
-      - name: Build API
-        run: dotnet build SwipeHire.Api/SwipeHire.Api/SwipeHire.Api.csproj --no-restore --configuration Release
+      - name: Build API solution
+        run: dotnet build SwipeHire.Api/SwipeHire.Api.slnx --configuration Release --no-restore
+
+      - name: Run API tests
+        run: dotnet test SwipeHire.Api/SwipeHire.Api.slnx --configuration Release --no-build --logger "trx;LogFileName=api-tests.trx" --results-directory api-test-results
+
+      - name: Upload API test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-results
+          path: api-test-results/*.trx
+          if-no-files-found: warn
+          retention-days: 14
+
+  functions:
+    name: Cloud Functions tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check JavaScript syntax
+        run: npm run check
+
+      - name: Run Cloud Functions tests
+        run: npm test

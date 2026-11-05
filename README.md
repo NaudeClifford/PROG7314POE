@@ -130,7 +130,12 @@ Maps, geocoding and jobs near you: In response to lecturer feedback, we added lo
 | 🟡 `PUT` | `/api/users/{userId}/settings` | Update account settings |
 | 🔵 `POST` | `/api/location/geocode` | Convert an address to coordinates |
 
-## GitHub Workflows (proof that they worked)
+## GitHub Actions and test evidence
+
+[CI runs](https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford/actions/workflows/ci.yml) cover Android unit tests and a debug build, API tests and a Release build, and Cloud Functions tests. CI runs on every push and on pull requests targeting `master`. Android and API test reports are attached to each run as artifacts.
+
+[Azure deployment runs](https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford/actions/workflows/deploy-api-azure.yml) run on relevant pushes to `master` or by manual dispatch. Deployment waits for all CI jobs to pass and uses the `AZURE_WEBAPP_PUBLISH_PROFILE` GitHub secret. The screenshots below show earlier successful runs; use the links above for the current run status.
+
 <img width="1880" height="762" alt="image" src="https://github.com/user-attachments/assets/3e4491ba-aab5-49aa-9ac8-805200c05e46" />
 
 Android Unit Tests: 
@@ -143,60 +148,35 @@ Android Unit Tests:
 #### Public Repository (this excludes the contribution of *this Classroom50 repository)
 <img width="1125" height="571" alt="image" src="https://github.com/user-attachments/assets/19fe1c59-5707-4400-9413-9a10d27eeb04" />
 
-##Setup for Project
-ensure that you get google-services.json from firebase when you make a firebase project. 
-Put this in the project folder, inside the app folder root. e.g. libs, src, .gitignore, build.gradle.ktys, google-services.json.
+## Setup for Project
 
-The local properties need to include: 
- API_BASE_URL=link to api/ https://localhost:5000.
- MAPS_API_KEY=google maps api key
- sdk.dir=File path to firebase admin sdk pulled from firebase project.
+### Android app
 
-Appsettings.json include:
-  "GoogleMaps": {
-    "ApiKey": ""
-  },
-    "GoogleCredentials": {
-      "Json": "C:\\Users\\cliff\\Downloads\\firebaseadminSDK.json"
-    },
-  "Firebase": {
-    "ProjectId": "swipehire-ID"
-  },
+1. Install Android Studio with Android SDK 34 and JDK 17. Android Studio normally creates `local.properties` with `sdk.dir` pointing to the Android SDK.
+2. The committed `app/google-services.json` is the Firebase Android configuration for `com.swipehire.app`. If you use a different Firebase project, replace it with that project's matching Android configuration file. Register the debug and release signing SHA-1 fingerprints in Firebase for Google sign-in.
+3. Add these values to the gitignored `local.properties` file:
 
- For Safer Option, configure these using terminal and make new environments in terminal, then the project
- will automatically use them and no risk of the secrets being shown to AI or Github.
- 
- Following examples using powershell per session: 
- $env:FIREBASE_API_KEY="your-api-key"
- $env:FIREBASE_AUTH_DOMAIN="your-project-id.firebaseapp.com"
- $env:FIREBASE_PROJECT_ID="your-project-id"
- $env:FIREBASE_STORAGE_BUCKET="your-project-id.firebasestorage.app"
- $env:FIREBASE_MESSAGING_SENDER_ID="your-messaging-sender-id"
- $env:FIREBASE_APP_ID="your-app-id"
+```properties
+API_BASE_URL=https://<your-azure-app>.azurewebsites.net/
+MAPS_API_KEY=<your-Android-restricted-Maps-key>
+```
 
- Following examples using powershell permanent: 
-  [Environment]::SetEnvironmentVariable("FIREBASE_API_KEY", "your-api-key", "User")
-  [Environment]::SetEnvironmentVariable("FIREBASE_AUTH_DOMAIN", "your-project-id.firebaseapp.com", "User")
-  [Environment]::SetEnvironmentVariable("FIREBASE_PROJECT_ID", "your-project-id", "User")
-  [Environment]::SetEnvironmentVariable("FIREBASE_STORAGE_BUCKET", "your-project-id.firebasestorage.app", "User")
-  [Environment]::SetEnvironmentVariable("FIREBASE_MESSAGING_SENDER_ID", "your-messaging-sender-id", "User")
-  [Environment]::SetEnvironmentVariable("FIREBASE_APP_ID", "your-app-id", "User")
-Do this for any sensitive information that the application needs.
+The default API URL (`http://10.0.2.2:5000/`) reaches a locally running API from an Android emulator. Use the Azure HTTPS URL for a physical phone. Restrict the Android Maps key by package name and signing certificate.
 
-Here is the firebase config in code for example:
-const firebaseConfig = {
-  apiKey: import.meta.env.FIREBASE_API_KEY,
-  authDomain: import.meta.env.FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.FIREBASE_APP_ID
-};
+### API
 
+The API targets .NET 10. Set `Firebase__ProjectId` and `GoogleMaps__ApiKey` in your local environment or Azure App Service settings. Provide Firestore credentials using `GOOGLE_APPLICATION_CREDENTIALS` (a local service account JSON file path) or `GoogleCredentials__Json` (the JSON content). Keep service account credentials and Maps server keys out of the repository.
 
+### Run the checks locally
 
-Remember to install firebase and firebase admin
-npm install firebase
-npm install firebaseadmin
+```powershell
+.\gradlew.bat :app:testDebugUnitTest :app:assembleDebug
+dotnet test SwipeHire.Api/SwipeHire.Api.slnx --configuration Release
+npm.cmd --prefix functions ci
+npm.cmd --prefix functions run check
+npm.cmd --prefix functions test
+```
+
+The same Android, API, and Cloud Functions checks run in GitHub Actions.
 
 
