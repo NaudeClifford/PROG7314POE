@@ -105,21 +105,6 @@ preferences via a dedicated settings menu" requirement:
 
 
 
-
-## Project Startup Instructions
-Download the APK to a mobile device for the fully functional mobile app. If trying to run in Android Studio, the project will work, except for the interactive maps
-as the API Key is not included in GitHub. Hence, we suggest downloading the APK onto a mobile device for a better experience. 
-To Download the APK, simply go to the Tags of this repository.
-
-Demo login details (Student):
-- Email - lerato.student@swipehire.example.com
-- Password - StudentDemo!2026
-
-Demo login details (Company):
-- Email - company.demo@swipehire.example.com
-- Password - CompanyDemo!2026
-
-
 ## Stack
 
 - Kotlin, Jetpack Compose (Material 3), Navigation Compose
@@ -192,4 +177,16 @@ npm.cmd --prefix functions test
 
 The same Android, API, and Cloud Functions checks run in GitHub Actions.
 
+## Project Startup Instructions APK
+Download the APK to a mobile device for the fully functional mobile app. If trying to run in Android Studio, the project will work, except for the interactive maps
+as the API Key is not included in GitHub. Hence, we suggest downloading the APK onto a mobile device for a better experience. 
+To Download the APK, simply go to the Tags of this repository.
+
+Demo login details (Student):
+- Email - lerato.student@swipehire.example.com
+- Password - StudentDemo!2026
+
+Demo login details (Company):
+- Email - company.demo@swipehire.example.com
+- Password - CompanyDemo!2026
 
