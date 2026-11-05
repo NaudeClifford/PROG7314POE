@@ -201,3 +201,5 @@ Demo login details (Company):
 - Email - company.demo@swipehire.example.com
 - Password - CompanyDemo!2026
 
+
+## Playstore Publication Readiness
