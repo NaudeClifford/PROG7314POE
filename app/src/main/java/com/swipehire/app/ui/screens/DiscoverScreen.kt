@@ -84,7 +84,6 @@ import com.swipehire.app.ui.theme.Sky
 import com.swipehire.app.ui.theme.Violet40
 import com.swipehire.app.ui.theme.VioletDeep
 import com.swipehire.app.ui.theme.decorativeRings
-import com.swipehire.app.ui.theme.glow
 import com.swipehire.app.ui.tr
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -445,7 +444,7 @@ private fun SwipeCardShell(
                 ) {
                     Surface(shape = CircleShape, color = Color.White.copy(alpha = 0.18f)) {
                         Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                            Icon(Icons.Filled.Info, contentDescription = "Full details", tint = Color.White, modifier = Modifier.size(18.dp))
+                            Icon(Icons.Filled.Info, contentDescription = tr("Full details"), tint = Color.White, modifier = Modifier.size(18.dp))
                         }
                     }
                 }
@@ -474,7 +473,7 @@ private fun MatchedSkillsRow(skills: List<String>, accent: Color) {
         Icon(Icons.Filled.AutoAwesome, contentDescription = null, tint = accent, modifier = Modifier.size(14.dp))
         Spacer(Modifier.width(6.dp))
         Text(
-            "Matches you on ${skills.joinToString(", ")}",
+            "${tr("Matches you on")} ${skills.joinToString(", ")}",
             style = MaterialTheme.typography.labelMedium,
             color = accent,
             fontWeight = FontWeight.Bold
@@ -505,7 +504,7 @@ private fun JobCard(job: JobPosting, isSaved: Boolean, onSaveToggle: () -> Unit,
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onSaveToggle, modifier = Modifier.size(36.dp)) {
-                    Icon(if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder, contentDescription = if (isSaved) "Remove saved job" else "Save job", tint = Violet40)
+                    Icon(if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder, contentDescription = if (isSaved) tr("Remove saved job") else tr("Save job"), tint = Violet40)
                 }
                 Surface(shape = RoundedCornerShape(50), color = Violet40.copy(alpha = 0.12f), modifier = Modifier.clickable(onClick = onViewLocation)) {
                     Text(tr("View location"), Modifier.padding(horizontal = 10.dp, vertical = 5.dp), style = MaterialTheme.typography.labelMedium, color = Violet40)
@@ -537,7 +536,7 @@ private fun StudentCard(student: StudentProfile, isSaved: Boolean, onSaveToggle:
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             IconButton(onClick = onSaveToggle) {
-                Icon(if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder, contentDescription = if (isSaved) "Remove saved candidate" else "Save candidate", tint = Mint20)
+                Icon(if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder, contentDescription = if (isSaved) tr("Remove saved candidate") else tr("Save candidate"), tint = Mint20)
             }
         }
         MatchedSkillsRow(student.matchedSkills, Mint20)
@@ -571,7 +570,7 @@ private fun TagRow(tags: List<String>, accent: Color) {
 private fun SwipeActionButton(icon: ImageVector, color: Color, onClick: () -> Unit) {
     FilledIconButton(
         onClick = onClick,
-        modifier = Modifier.size(60.dp).glow(color, radiusMultiplier = 2.4f, alpha = 0.4f),
+        modifier = Modifier.size(60.dp),
         colors = IconButtonDefaults.filledIconButtonColors(
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor = color
@@ -603,7 +602,7 @@ private fun JobDetailContent(job: JobPosting, isSaved: Boolean, onSaveToggle: ()
         OutlinedButton(onClick = onSaveToggle, modifier = Modifier.fillMaxWidth()) {
             Icon(if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text(if (isSaved) "Remove from saved" else "Save for later")
+            Text(if (isSaved) tr("Remove from saved") else tr("Save for later"))
         }
         Spacer(Modifier.height(24.dp))
         Surface(
@@ -612,7 +611,7 @@ private fun JobDetailContent(job: JobPosting, isSaved: Boolean, onSaveToggle: ()
             modifier = Modifier.fillMaxWidth().clickable(onClick = onViewLocation)
         ) {
             Text(
-                "View on map",
+                tr("View on map"),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 14.dp),
                 style = MaterialTheme.typography.labelLarge,
                 color = Color.White,
@@ -638,7 +637,7 @@ private fun StudentDetailContent(student: StudentProfile, isSaved: Boolean, onSa
         OutlinedButton(onClick = onSaveToggle, modifier = Modifier.fillMaxWidth()) {
             Icon(if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text(if (isSaved) "Remove from saved" else "Save for later")
+            Text(if (isSaved) tr("Remove from saved") else tr("Save for later"))
         }
         Spacer(Modifier.height(12.dp))
     }
@@ -714,7 +713,7 @@ private fun CompanyDiscoverContent(
                 IconButton(onClick = { mode = if (mode == BrowseMode.SWIPE) BrowseMode.LIST else BrowseMode.SWIPE }) {
                     Icon(
                         if (mode == BrowseMode.SWIPE) Icons.Filled.ViewAgenda else Icons.Filled.GridView,
-                        contentDescription = "Toggle view",
+                        contentDescription = tr("Toggle view"),
                         tint = Mint40
                     )
                 }
@@ -851,7 +850,7 @@ private fun CandidateListRow(
                     Text("${student.course} · ${student.year}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 IconButton(onClick = onSaveToggle) {
-                    Icon(if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder, contentDescription = if (isSaved) "Remove saved candidate" else "Save candidate", tint = Mint40)
+                    Icon(if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder, contentDescription = if (isSaved) tr("Remove saved candidate") else tr("Save candidate"), tint = Mint40)
                 }
             }
             if (student.matchedSkills.isNotEmpty()) {
@@ -863,12 +862,12 @@ private fun CandidateListRow(
                 IconButton(
                     onClick = onPass,
                     modifier = Modifier.size(48.dp).clip(CircleShape).background(Coral.copy(alpha = 0.12f))
-                ) { Icon(Icons.Filled.Close, contentDescription = "Pass", tint = Coral, modifier = Modifier.size(20.dp)) }
+                ) { Icon(Icons.Filled.Close, contentDescription = tr("Pass"), tint = Coral, modifier = Modifier.size(20.dp)) }
                 Spacer(Modifier.width(10.dp))
                 IconButton(
                     onClick = onLike,
                     modifier = Modifier.size(48.dp).clip(CircleShape).background(Mint40.copy(alpha = 0.12f))
-                ) { Icon(Icons.Filled.Favorite, contentDescription = "Like", tint = Mint40, modifier = Modifier.size(20.dp)) }
+                ) { Icon(Icons.Filled.Favorite, contentDescription = tr("Like"), tint = Mint40, modifier = Modifier.size(20.dp)) }
             }
         }
     }

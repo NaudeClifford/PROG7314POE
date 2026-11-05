@@ -50,7 +50,7 @@ fun RoleSelectScreen(onRoleChosen: (AccountType) -> Unit) {
         Text(tr("Who's\nswiping today?"), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(8.dp))
         Text(
-            "This role is tied to your signed-in account. Log out to use another account.",
+            tr("This role is tied to your signed-in account. Log out to use another account."),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

@@ -53,7 +53,6 @@ import com.swipehire.app.data.currentFirebaseUserId
 import com.swipehire.app.data.repository.AppRepository
 import com.swipehire.app.ui.components.PipelinePanel
 import com.swipehire.app.ui.theme.Violet40
-import com.swipehire.app.ui.theme.glow
 import com.swipehire.app.ui.tr
 import com.swipehire.app.viewmodel.ChatViewModel
 import com.swipehire.app.viewmodel.PipelineViewModel
@@ -97,7 +96,7 @@ fun ChatDetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(Icons.Filled.ArrowBack, contentDescription = tr("Back"))
                 }
                 Text(tr("Chat unavailable"), style = MaterialTheme.typography.titleMedium)
             }
@@ -122,7 +121,7 @@ fun ChatDetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(Icons.Filled.ArrowBack, contentDescription = tr("Back"))
                 }
                 Column {
                     Text(match?.name ?: "Chat", style = MaterialTheme.typography.titleMedium)
@@ -182,11 +181,10 @@ fun ChatDetailScreen(
                 },
                 modifier = Modifier
                     .size(46.dp)
-                    .glow(Violet40, radiusMultiplier = 2.2f, alpha = 0.4f)
                     .clip(CircleShape)
                     .background(Violet40)
             ) {
-                Icon(Icons.Filled.Send, contentDescription = "Send", tint = Color.White)
+                Icon(Icons.Filled.Send, contentDescription = tr("Send"), tint = Color.White)
             }
         }
     }

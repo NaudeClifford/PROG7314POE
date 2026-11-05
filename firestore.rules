@@ -36,6 +36,22 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read, create, update, delete: if isCurrentUser(userId);
+
+      match /devices/{deviceId} {
+        allow read: if false;
+        allow create, update: if isCurrentUser(userId) &&
+          request.resource.data.keys().hasOnly(['fid', 'token', 'platform', 'enabled', 'updatedAt']) &&
+          request.resource.data.fid is string &&
+          request.resource.data.fid.size() > 0 &&
+          request.resource.data.fid.size() <= 256 &&
+          request.resource.data.token is string &&
+          request.resource.data.token.size() > 0 &&
+          request.resource.data.token.size() <= 4096 &&
+          request.resource.data.platform == 'android' &&
+          request.resource.data.enabled is bool &&
+          request.resource.data.updatedAt == request.time;
+        allow delete: if isCurrentUser(userId);
+      }
     }
 
     match /students/{userId} {

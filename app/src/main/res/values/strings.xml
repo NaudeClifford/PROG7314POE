@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SwipeHire</string>
+    <string name="notification_channel_name">SwipeHire alerts</string>
+    <string name="notification_channel_description">Matches, messages, interviews and application updates</string>
 </resources>

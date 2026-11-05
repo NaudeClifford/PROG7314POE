@@ -43,7 +43,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.swipehire.app.data.AccountType
 import com.swipehire.app.data.currentFirebaseUserId
 import com.swipehire.app.ui.theme.Violet40
-import com.swipehire.app.ui.theme.glow
 import com.swipehire.app.ui.tr
 import com.swipehire.app.viewmodel.DiscoverViewModel
 
@@ -83,7 +82,7 @@ fun JobLocationScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                Icon(Icons.Filled.ArrowBack, contentDescription = tr("Back"))
             }
             Column {
                 Text(job.role, style = MaterialTheme.typography.titleMedium)
@@ -130,7 +129,7 @@ fun JobLocationScreen(
                         context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
                     }
                 },
-                modifier = Modifier.fillMaxWidth().height(52.dp).glow(Violet40, radiusMultiplier = 1.6f, alpha = 0.3f),
+                modifier = Modifier.fillMaxWidth().height(52.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Violet40)
             ) {

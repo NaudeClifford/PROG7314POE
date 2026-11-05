@@ -1,6 +1,7 @@
 package com.swipehire.app.ui.screens
 
 import android.util.Patterns
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -71,6 +72,8 @@ import com.swipehire.app.ui.tr
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
+private const val AUTH_TAG = "SwipeHireAuth"
+
 @Composable
 fun LoginScreen(
     onAuthenticated: () -> Unit,
@@ -124,9 +127,7 @@ fun LoginScreen(
                     "string",
                     context.packageName
                 )
-                check(clientIdResource != 0) {
-                    "Google SSO is not configured. Enable Google Authentication, add the app SHA-1, and replace app/google-services.json."
-                }
+                check(clientIdResource != 0) { "Google sign-in is not configured. Contact the app administrator." }
 
                 val googleIdOption = GetGoogleIdOption.Builder()
                     .setFilterByAuthorizedAccounts(false)
@@ -148,12 +149,15 @@ fun LoginScreen(
                 val firebaseCredential = GoogleAuthProvider.getCredential(googleCredential.idToken, null)
                 FirebaseAuth.getInstance().signInWithCredential(firebaseCredential).await()
                 check(FirebaseAuth.getInstance().currentUser != null) { "Firebase did not create a signed-in session." }
+                Log.i(AUTH_TAG, "Google sign-in succeeded")
                 onAuthenticated()
             } catch (_: GetCredentialCancellationException) {
                 // The user closed the account chooser.
+                Log.d(AUTH_TAG, "Google sign-in cancelled")
             } catch (error: Exception) {
+                Log.w(AUTH_TAG, "Google sign-in failed: ${error.javaClass.simpleName}")
                 errorMessage = if (error.message?.contains("No credentials available", ignoreCase = true) == true) {
-                    "No Google account is available. Add one in the emulator's Settings, use a Google Play emulator image, or sign in with email below."
+                    "No Google account is available. Add one on your device or sign in with email below."
                 } else {
                     friendlyAuthError(error)
                 }
@@ -184,8 +188,10 @@ fun LoginScreen(
                     auth.signInWithEmailAndPassword(cleanEmail, password).await()
                 }
                 check(auth.currentUser != null) { "Firebase did not create a signed-in session." }
+                Log.i(AUTH_TAG, if (registerMode) "Email registration succeeded" else "Email sign-in succeeded")
                 onAuthenticated()
             } catch (error: Exception) {
+                Log.w(AUTH_TAG, "Email authentication failed: ${error.javaClass.simpleName}")
                 errorMessage = friendlyAuthError(error)
             } finally {
                 busy = false
@@ -205,7 +211,9 @@ fun LoginScreen(
             try {
                 FirebaseAuth.getInstance().sendPasswordResetEmail(cleanEmail).await()
                 infoMessage = "Password reset email sent."
+                Log.i(AUTH_TAG, "Password reset request accepted")
             } catch (error: Exception) {
+                Log.w(AUTH_TAG, "Password reset failed: ${error.javaClass.simpleName}")
                 errorMessage = friendlyAuthError(error)
             } finally {
                 busy = false
@@ -226,7 +234,7 @@ fun LoginScreen(
         ) {
             Image(
                 painter = painterResource(R.drawable.login_logo),
-                contentDescription = "SwipeHire logo",
+                contentDescription = tr("SwipeHire logo"),
                 modifier = Modifier.size(88.dp),
                 contentScale = ContentScale.Fit
             )
@@ -370,9 +378,11 @@ private fun friendlyAuthError(error: Exception): String = when (error) {
     is FirebaseAuthInvalidCredentialsException -> "The email or password is incorrect."
     is FirebaseNetworkException -> "Network connection failed. Check your internet connection."
     is FirebaseAuthException -> when (error.errorCode) {
-        "ERROR_OPERATION_NOT_ALLOWED" -> "Email/password login is not enabled in Firebase Console."
+        "ERROR_OPERATION_NOT_ALLOWED" -> "Email/password login is not enabled. Contact the app administrator."
         "ERROR_TOO_MANY_REQUESTS" -> "Too many attempts. Wait a moment and try again."
-        else -> error.message ?: "Firebase authentication failed."
+        else -> "Firebase authentication failed."
     }
-    else -> error.message ?: "Authentication failed. Please try again."
+    is IllegalStateException -> if (error.message == "Google sign-in is not configured. Contact the app administrator.")
+        "Google sign-in is not configured. Contact the app administrator." else "Authentication failed. Please try again."
+    else -> "Authentication failed. Please try again."
 }

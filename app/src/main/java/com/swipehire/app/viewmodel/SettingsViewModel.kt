@@ -1,6 +1,7 @@
 package com.swipehire.app.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.swipehire.app.data.AccountType
@@ -16,11 +17,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import com.google.firebase.auth.FirebaseAuth
+import com.swipehire.app.data.signOutFirebaseUser
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+    private companion object { const val TAG = "SwipeHireSettings" }
     private val localRepository = SettingsRepository(application)
     private val appRepository = AppRepository()
     private val remoteSettings = MutableStateFlow<UserSettingsDto?>(null)
@@ -56,7 +59,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun refreshSession() = viewModelScope.launch {
         val userId = currentFirebaseUserId() ?: return@launch
         remoteAccountType.value = appRepository.getAccountType(userId)
-        appRepository.getUserSettings(userId)?.let {
+        (OfflineSyncManager.pendingSettingsFor(userId) ?: appRepository.getUserSettings(userId))?.let {
             remoteSettings.value = it
             localRepository.setLanguage(AppLanguage.fromCode(it.language))
             localRepository.setAccountPreferences(
@@ -65,6 +68,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 it.messageAlerts,
                 it.profileVisible
             )
+            Log.d(TAG, "Account settings loaded; pending local changes preserved")
+        } ?: run {
+            Log.w(TAG, "Account settings unavailable; using device settings")
         }
     }
 
@@ -75,6 +81,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             remoteAccountType.value = type
             localRepository.setOnboarded(true)
         }
+        Log.i(TAG, "Account type selection saved=$saved")
         onSaved(saved)
     }
 
@@ -85,33 +92,45 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             remoteAccountType.value = role
             localRepository.setOnboarded(true)
         }
+        Log.d(TAG, "Signed-in account resolved=${role != null}")
         onResolved(role)
     }
 
     fun logOut() = viewModelScope.launch {
-        FirebaseAuth.getInstance().signOut()
+        signOutFirebaseUser(getApplication())
         remoteAccountType.value = null
         remoteSettings.value = null
         localRepository.setOnboarded(false)
+        Log.i(TAG, "Signed out; account settings cleared")
     }
     fun setThemeMode(mode: ThemeMode) = viewModelScope.launch { localRepository.setThemeMode(mode) }
     fun setLanguage(language: AppLanguage) = viewModelScope.launch {
+        val previousLanguage = localRepository.state.first().language
         localRepository.setLanguage(language)
-        val userId = currentFirebaseUserId() ?: return@launch
+        val userId = currentFirebaseUserId() ?: run {
+            Log.i(TAG, "Device language changed to ${language.code}")
+            return@launch
+        }
         val previous = currentRemoteSettings()
         val updated = previous.copy(language = language.code)
         remoteSettings.value = updated
-        if (appRepository.updateUserSettings(userId, updated) == null) remoteSettings.value = previous
+        if (appRepository.updateUserSettings(userId, updated) == null) {
+            remoteSettings.value = previous
+            localRepository.setLanguage(previousLanguage)
+            Log.w(TAG, "Language update failed; previous language restored")
+        } else {
+            Log.i(TAG, "Language changed to ${language.code}")
+        }
     }
     fun setBiometricLock(enabled: Boolean) = viewModelScope.launch { localRepository.setBiometricLock(enabled) }
     fun setOnboarded(done: Boolean) = viewModelScope.launch { localRepository.setOnboarded(done) }
 
-    fun setPushNotifications(enabled: Boolean) = updateRemote { it.copy(pushNotifications = enabled) }
-    fun setMatchAlerts(enabled: Boolean) = updateRemote { it.copy(matchAlerts = enabled) }
-    fun setMessageAlerts(enabled: Boolean) = updateRemote { it.copy(messageAlerts = enabled) }
-    fun setProfileVisible(visible: Boolean) = updateRemote { it.copy(profileVisible = visible) }
+    fun setPushNotifications(enabled: Boolean) = updateRemote("push notifications") { it.copy(pushNotifications = enabled) }
+    fun setMatchAlerts(enabled: Boolean) = updateRemote("match alerts") { it.copy(matchAlerts = enabled) }
+    fun setMessageAlerts(enabled: Boolean) = updateRemote("message alerts") { it.copy(messageAlerts = enabled) }
+    fun setProfileVisible(visible: Boolean) = updateRemote("profile visibility") { it.copy(profileVisible = visible) }
 
-    private fun updateRemote(transform: (UserSettingsDto) -> UserSettingsDto) {
+    private fun updateRemote(setting: String, transform: (UserSettingsDto) -> UserSettingsDto) {
         val userId = currentFirebaseUserId() ?: return
         val previous = currentRemoteSettings()
         val updated = transform(previous)
@@ -126,6 +145,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             val persisted = appRepository.updateUserSettings(userId, updated)
             if (persisted != null) {
                 remoteSettings.value = persisted
+                Log.i(TAG, "$setting updated")
             } else {
                 remoteSettings.value = previous
                 localRepository.setAccountPreferences(
@@ -134,6 +154,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                     previous.messageAlerts,
                     previous.profileVisible
                 )
+                Log.w(TAG, "$setting update failed; previous setting restored")
             }
         }
     }

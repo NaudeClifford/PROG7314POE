@@ -49,7 +49,7 @@ class PipelineViewModel(
                 repository.observeInterviews(matchId).collect { list -> _state.update { it.copy(interviews = list) } }
             }
         }
-        Log.d(TAG, "Observing pipeline for match $matchId")
+        Log.d(TAG, "Observing application pipeline")
     }
 
     fun clearError() = _state.update { it.copy(error = null) }
