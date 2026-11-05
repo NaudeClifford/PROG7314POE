@@ -4,6 +4,13 @@ Native Kotlin + Jetpack Compose frontend for **SwipeHire**, the reverse job-matc
 PROG7314 Part 1 design where companies swipe on student profiles, students swipe on job postings,
 mutual interest opens a chat that could possibly link them to their next job/candidate.
 
+- What is the Purpose of the application?
+To bridge the gap between companies who are looking for new employees, and students who are actively looking
+for job openings.
+- What makes our App Different?
+The easy interaction of swiping left and right to match companies and students. Its an easier, more fun, and effective way of meeting
+with a potential new Employee and Company. 
+
 ## Group Members
 |Name|Surname|StudentNo|Group|
 |---|---|---|---|
