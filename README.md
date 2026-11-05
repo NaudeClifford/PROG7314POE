@@ -16,7 +16,7 @@ mutual interest opens a chat that could possibly link them to their next job/can
  https://www.youtube.com/watch?v=MQEapbOJT-U
 
 ## Classroom50 Repository Link
-https://github.com/EMGPRS/prog7314-2026-poe-part-2-group-naudeclifford.git
+https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford.git
 
 ## Public Repository Link
 https://github.com/VanNiekerkJoe/SwipeHire.git
@@ -61,7 +61,15 @@ preferences via a dedicated settings menu" requirement:
 <img width="386" height="786" alt="Screenshot 2026-09-22 090843" src="https://github.com/user-attachments/assets/b6982c57-92b4-4470-8e0e-c3a1e748388c" />
 
 
-
+Part 3 New Features:
+We had added biometric login, and also a session state that includes offline sync with the application and the api.
+This allows the user to use the application even when the device is offline.
+We included a notification service to allow for 2 factor authentication and other uses for the application.
+We had multi-language working in part 2 but refined it and ensured it is working.
+We have our user defined feature 4 that has been added: 
+We have our user defined feature 5 that has been added: 
+we had kept the UI from part 2 and had updated it after finding any inconsistances.
+We have prepaid the application to be sent to google playstore and ready for publishication.
 
 ## Project Startup Instructions
 Download the APK to a mobile device for the fully functional mobile app. If trying to run in Android Studio, the project will work, except for the interactive maps
@@ -135,7 +143,60 @@ Android Unit Tests:
 #### Public Repository (this excludes the contribution of *this Classroom50 repository)
 <img width="1125" height="571" alt="image" src="https://github.com/user-attachments/assets/19fe1c59-5707-4400-9413-9a10d27eeb04" />
 
+##Setup for Project
+ensure that you get google-services.json from firebase when you make a firebase project. 
+Put this in the project folder, inside the app folder root. e.g. libs, src, .gitignore, build.gradle.ktys, google-services.json.
+
+The local properties need to include: 
+ API_BASE_URL=link to api/ https://localhost:5000.
+ MAPS_API_KEY=google maps api key
+ sdk.dir=File path to firebase admin sdk pulled from firebase project.
+
+Appsettings.json include:
+  "GoogleMaps": {
+    "ApiKey": ""
+  },
+    "GoogleCredentials": {
+      "Json": "C:\\Users\\cliff\\Downloads\\firebaseadminSDK.json"
+    },
+  "Firebase": {
+    "ProjectId": "swipehire-ID"
+  },
+
+ For Safer Option, configure these using terminal and make new environments in terminal, then the project
+ will automatically use them and no risk of the secrets being shown to AI or Github.
+ 
+ Following examples using powershell per session: 
+ $env:FIREBASE_API_KEY="your-api-key"
+ $env:FIREBASE_AUTH_DOMAIN="your-project-id.firebaseapp.com"
+ $env:FIREBASE_PROJECT_ID="your-project-id"
+ $env:FIREBASE_STORAGE_BUCKET="your-project-id.firebasestorage.app"
+ $env:FIREBASE_MESSAGING_SENDER_ID="your-messaging-sender-id"
+ $env:FIREBASE_APP_ID="your-app-id"
+
+ Following examples using powershell permanent: 
+  [Environment]::SetEnvironmentVariable("FIREBASE_API_KEY", "your-api-key", "User")
+  [Environment]::SetEnvironmentVariable("FIREBASE_AUTH_DOMAIN", "your-project-id.firebaseapp.com", "User")
+  [Environment]::SetEnvironmentVariable("FIREBASE_PROJECT_ID", "your-project-id", "User")
+  [Environment]::SetEnvironmentVariable("FIREBASE_STORAGE_BUCKET", "your-project-id.firebasestorage.app", "User")
+  [Environment]::SetEnvironmentVariable("FIREBASE_MESSAGING_SENDER_ID", "your-messaging-sender-id", "User")
+  [Environment]::SetEnvironmentVariable("FIREBASE_APP_ID", "your-app-id", "User")
+Do this for any sensitive information that the application needs.
+
+Here is the firebase config in code for example:
+const firebaseConfig = {
+  apiKey: import.meta.env.FIREBASE_API_KEY,
+  authDomain: import.meta.env.FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.FIREBASE_APP_ID
+};
 
 
+
+Remember to install firebase and firebase admin
+npm install firebase
+npm install firebaseadmin
 
 
