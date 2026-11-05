@@ -36,6 +36,10 @@ https://github.com/VanNiekerkJoe/SwipeHire.git
 | **Settings** | `ui/screens/SettingsScreen.kt` | **20-mark deliverable — see below** |<img width="384" height="796" alt="Screenshot 2026-09-22 090826" src="https://github.com/user-attachments/assets/f96ef047-fbf5-4dbe-bf12-9cd081e3e0d5" />|
 | Jobs near you | `ui/screens/NearbyJobsScreen.kt` | Google Map + distance-sorted list, from Discover's "Near you" button (student view) |<img width="267" height="537" alt="Screenshot 2026-09-22 135603" src="https://github.com/user-attachments/assets/2b6a4b42-5571-456e-ab45-c7bb3c9a330c" />|
 | Job location | `ui/screens/JobLocationScreen.kt` | Single job on a map with a "Get directions" deep link into Google Maps | <img width="275" height="537" alt="image" src="https://github.com/user-attachments/assets/99566277-a37b-441c-9f47-017bf42e5ff6" />|
+| Application Status | `ui/screens/ChatDetailScreen.kt` | Track Application Status | <img width="406" height="904" alt="WhatsApp Image 2026-11-05 at 10 40 03 AM (1)" src="https://github.com/user-attachments/assets/8f933b20-28aa-404d-aab1-57307064d6a0" />|
+| Push Notifications | `Firebase Cloud Messaging` | Get Real-Time updates on Matches, New Job Listings, and More! | <img width="738" height="1600" alt="WhatsApp Image 2026-11-05 at 10 40 03 AM" src="https://github.com/user-attachments/assets/49d015df-c453-4af4-850e-7da0119e8e34" />|
+| Schedule Interview | `Pop-Up` | Propose an Interview with a Date, Time, Duration, Format, and More | <img width="403" height="907" alt="WhatsApp Image 2026-11-05 at 10 43 08 AM" src="https://github.com/user-attachments/assets/2ee4b79b-1829-431e-aed6-e0675695c813" /> <img width="403" height="902" alt="WhatsApp Image 2026-11-05 at 10 44 34 AM" src="https://github.com/user-attachments/assets/eab6684e-bfbb-4889-98b4-a22b579883a2" />|
+| Biometric Lock | `Security` | Biometric Security Feature | <img width="402" height="381" alt="WhatsApp Image 2026-11-05 at 10 44 59 AM" src="https://github.com/user-attachments/assets/98c9d2d9-0587-4b92-8704-4f885700fcf5" />|
 
 
 ## Settings menu (Application State requirement)
