@@ -32,6 +32,7 @@ This allows the user to use the application even when the device is offline.
 We included a notification service to allow for 2 factor authentication and other uses for the application.
 We had multi-language working in part 2 but refined it and ensured it is working.
 (Please see Screenshots in the Screens&Features Section)
+
 We have our user defined feature 4 that has been added: 
 Interview Scheduler
 
