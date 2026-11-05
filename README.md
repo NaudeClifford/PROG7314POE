@@ -141,15 +141,8 @@ Demo login details (Company):
 
 [CI runs](https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford/actions/workflows/ci.yml) cover Android unit tests and a debug build, API tests and a Release build, and Cloud Functions tests. CI runs on every push and on pull requests targeting `master`. Android and API test reports are attached to each run as artifacts.
 
-[Azure deployment runs](https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford/actions/workflows/deploy-api-azure.yml) run on relevant pushes to `master` or by manual dispatch. Deployment waits for all CI jobs to pass and uses the `AZURE_WEBAPP_PUBLISH_PROFILE` GitHub secret. The screenshots below show earlier successful runs; use the links above for the current run status.
+[Azure deployment runs](https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford/actions/workflows/deploy-api-azure.yml) run on relevant pushes to `master` or by manual dispatch. Deployment waits for all CI jobs to pass and uses the `AZURE_WEBAPP_PUBLISH_PROFILE` GitHub secret. 
 
-<img width="1880" height="762" alt="image" src="https://github.com/user-attachments/assets/3e4491ba-aab5-49aa-9ac8-805200c05e46" />
-
-Android Unit Tests: 
-<img width="1845" height="756" alt="image" src="https://github.com/user-attachments/assets/c1ab5424-051d-4740-a673-580aeed55f75" />
-
-.NET API Build:
-<img width="1871" height="788" alt="image" src="https://github.com/user-attachments/assets/891d722a-f07c-4107-abc0-b0e1c0cad655" />
 
 
 ## Setup for Project
