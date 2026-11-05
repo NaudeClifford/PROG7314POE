@@ -204,6 +204,8 @@ Demo login details (Company):
 
 ## Playstore Publication Readiness
 
-A Signed APK has been included in the GitHub Releases.
+### A Signed APK has been included in the GitHub Releases:
+<img width="385" height="142" alt="image" src="https://github.com/user-attachments/assets/f39f3f91-6293-411c-9f2c-191c60941962" />
 
-Promotional Screenshots: 
+
+### Promotional Screenshots: 
