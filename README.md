@@ -25,13 +25,25 @@ This allows the user to use the application even when the device is offline.
 We included a notification service to allow for 2 factor authentication and other uses for the application.
 We had multi-language working in part 2 but refined it and ensured it is working.
 We have our user defined feature 4 that has been added: 
+Interview Scheduler
+
+· What it does: Allows a Company to propose an interview date, time, duration, and mode (Video, Phone, In-Person). The Student can then Accept, Decline, or the Company can Cancel. If accepted, it provides an "Add to Calendar" button.
+· Where to find it in the app: Inside a Chat/Match, in the collapsible "Application status" panel.
+(Please see Screenshots in the Screens&Features Section)
+
 We have our user defined feature 5 that has been added: 
-we had kept the UI from part 2 and had updated it after finding any inconsistances.
+Application Pipeline Tracker
+
+· What it does: A visual timeline that tracks a candidate's progress: Matched → Interview → Offer → Hired (or Declined). It has role-based rules (e.g., only the company can move a candidate to "Offer", only the student can "Accept Offer"). It shows live updates on the Matches screen and in the Chat timeline.
+· Where to find it in the app: The timeline inside the Chat panel, and the colored status chips on the main Matches screen list.
+(Please see Screenshots in the Screens&Features Section)
+
+We had kept the UI from part 2 and had updated it after finding any inconsistances.
 We have prepaid the application to be sent to google playstore and ready for publishication.
 --- 
 
 
-## Screens
+## Screens&Features
 
 | Screen | File | Notes | Screenshot |
 |---|---|---|---|
@@ -46,7 +58,7 @@ We have prepaid the application to be sent to google playstore and ready for pub
 | Job location | `ui/screens/JobLocationScreen.kt` | Single job on a map with a "Get directions" deep link into Google Maps | <img width="275" height="537" alt="image" src="https://github.com/user-attachments/assets/99566277-a37b-441c-9f47-017bf42e5ff6" />|
 | Application Status | `ui/screens/ChatDetailScreen.kt` | Track Application Status | <img width="406" height="904" alt="WhatsApp Image 2026-11-05 at 10 40 03 AM (1)" src="https://github.com/user-attachments/assets/8f933b20-28aa-404d-aab1-57307064d6a0" />|
 | Push Notifications | `Firebase Cloud Messaging` | Get Real-Time updates on Matches, New Job Listings, and More! | <img width="738" height="1600" alt="WhatsApp Image 2026-11-05 at 10 40 03 AM" src="https://github.com/user-attachments/assets/49d015df-c453-4af4-850e-7da0119e8e34" />|
-| Schedule Interview | `Pop-Up` | Propose an Interview with a Date, Time, Duration, Format, and More | <img width="403" height="907" alt="WhatsApp Image 2026-11-05 at 10 43 08 AM" src="https://github.com/user-attachments/assets/2ee4b79b-1829-431e-aed6-e0675695c813" /> <img width="403" height="902" alt="WhatsApp Image 2026-11-05 at 10 44 34 AM" src="https://github.com/user-attachments/assets/eab6684e-bfbb-4889-98b4-a22b579883a2" />|
+| Schedule Interview | `Feature 4 & 5` | Propose an Interview with a Date, Time, Duration, Format, and More. Check the Pipeline for tracking. | <img width="403" height="907" alt="WhatsApp Image 2026-11-05 at 10 43 08 AM" src="https://github.com/user-attachments/assets/2ee4b79b-1829-431e-aed6-e0675695c813" /> <img width="403" height="902" alt="WhatsApp Image 2026-11-05 at 10 44 34 AM" src="https://github.com/user-attachments/assets/eab6684e-bfbb-4889-98b4-a22b579883a2" />|
 | Biometric Lock | `Security` | Biometric Security Feature | <img width="402" height="381" alt="WhatsApp Image 2026-11-05 at 10 44 59 AM" src="https://github.com/user-attachments/assets/98c9d2d9-0587-4b92-8704-4f885700fcf5" />|
 
 
@@ -59,6 +71,10 @@ The following three features were described in the Part 1 planning document and 
 2. Swipe-based discovery and matching: Students browse job postings while companies browse student profiles. The app highlights overlapping skills, records each decision and creates a match when both sides express interest.
 
 3. Chat and in-app alerts: Matched students and companies can exchange messages in a private conversation. The app also displays alerts for activity such as new matches and messages.
+
+4. Interview Scheduler: What it does: Allows a Company to propose an interview date, time, duration, and mode (Video, Phone, In-Person). The Student can then Accept, Decline, or the Company can Cancel. If accepted, it provides an "Add to Calendar" button. Where to find it in the app: Inside a Chat/Match, in the collapsible "Application status" panel.
+
+5. Application Pipeline Tracker: What it does: A visual timeline that tracks a candidate's progress: Matched → Interview → Offer → Hired (or Declined). It has role-based rules (e.g., only the company can move a candidate to "Offer", only the student can "Accept Offer"). It shows live updates on the Matches screen and in the Chat timeline. Where to find it in the app: The timeline inside the Chat panel, and the colored status chips on the main Matches screen list.
 
 Feature Added After Lecturer Feedback:
 
