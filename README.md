@@ -19,6 +19,18 @@ mutual interest opens a chat that could possibly link them to their next job/can
 https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford.git
 
 
+## Part 3 New Features:
+We had added biometric login, and also a session state that includes offline sync with the application and the api.
+This allows the user to use the application even when the device is offline.
+We included a notification service to allow for 2 factor authentication and other uses for the application.
+We had multi-language working in part 2 but refined it and ensured it is working.
+We have our user defined feature 4 that has been added: 
+We have our user defined feature 5 that has been added: 
+we had kept the UI from part 2 and had updated it after finding any inconsistances.
+We have prepaid the application to be sent to google playstore and ready for publishication.
+--- 
+
+
 ## Screens
 
 | Screen | File | Notes | Screenshot |
@@ -61,15 +73,7 @@ preferences via a dedicated settings menu" requirement:
 <img width="386" height="786" alt="Screenshot 2026-09-22 090843" src="https://github.com/user-attachments/assets/b6982c57-92b4-4470-8e0e-c3a1e748388c" />
 
 
-Part 3 New Features:
-We had added biometric login, and also a session state that includes offline sync with the application and the api.
-This allows the user to use the application even when the device is offline.
-We included a notification service to allow for 2 factor authentication and other uses for the application.
-We had multi-language working in part 2 but refined it and ensured it is working.
-We have our user defined feature 4 that has been added: 
-We have our user defined feature 5 that has been added: 
-we had kept the UI from part 2 and had updated it after finding any inconsistances.
-We have prepaid the application to be sent to google playstore and ready for publishication.
+
 
 ## Project Startup Instructions
 Download the APK to a mobile device for the fully functional mobile app. If trying to run in Android Studio, the project will work, except for the interactive maps
