@@ -203,3 +203,7 @@ Demo login details (Company):
 
 
 ## Playstore Publication Readiness
+
+A Signed APK has been included in the GitHub Releases.
+
+Promotional Screenshots: 
