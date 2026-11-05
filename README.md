@@ -1,4 +1,4 @@
-# SwipeHire — PROG7314 POE Part 2 
+# SwipeHire — PROG7314 POE Final Part
 
 Native Kotlin + Jetpack Compose frontend for **SwipeHire**, the reverse job-matching app from the
 PROG7314 Part 1 design where companies swipe on student profiles, students swipe on job postings,
