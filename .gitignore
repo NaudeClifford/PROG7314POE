@@ -12,6 +12,8 @@
 .gradle/
 .idea/
 **/build/
+**/node_modules/
+functions/.firebase/
 
 local.properties
 **/*service-account*.json
