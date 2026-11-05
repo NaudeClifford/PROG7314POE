@@ -18,10 +18,6 @@ mutual interest opens a chat that could possibly link them to their next job/can
 ## Classroom50 Repository Link
 https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford.git
 
-## Public Repository Link
-https://github.com/VanNiekerkJoe/SwipeHire.git
-
-
 
 ## Screens
 
