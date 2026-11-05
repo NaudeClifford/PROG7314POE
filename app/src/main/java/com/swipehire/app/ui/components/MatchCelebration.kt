@@ -96,9 +96,9 @@ fun MatchCelebrationOverlay(
                     Spacer(Modifier.height(12.dp))
                     Text(
                         if (isCompanySide)
-                            "You both swiped right. Say hello and get the conversation going."
+                            tr("You both swiped right. Say hello and get the conversation going.")
                         else
-                            "You both swiped right — time to make a great first impression.",
+                            tr("You both swiped right — time to make a great first impression."),
                         color = Color.White.copy(alpha = 0.82f),
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center

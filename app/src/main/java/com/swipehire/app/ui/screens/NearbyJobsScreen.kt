@@ -131,7 +131,7 @@ fun NearbyJobsScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                Icon(Icons.Filled.ArrowBack, contentDescription = tr("Back"))
             }
             Text(tr("Jobs near you"), style = MaterialTheme.typography.titleMedium)
         }
@@ -159,7 +159,7 @@ fun NearbyJobsScreen(
                     userLocation?.let {
                         Marker(
                             state = MarkerState(position = LatLng(it.latitude, it.longitude)),
-                            title = "You"
+                            title = tr("You")
                         )
                     }
                     sortedJobs.forEach { (job, _) ->
@@ -209,7 +209,7 @@ private fun LocationPermissionPrompt(onGrant: () -> Unit) {
         Text(tr("See jobs close to you"), style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(6.dp))
         Text(
-            "SwipeHire needs your location to sort listings by distance and show them on the map.",
+            tr("SwipeHire needs your location to sort listings by distance and show them on the map."),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

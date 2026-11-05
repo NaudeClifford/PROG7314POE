@@ -84,6 +84,7 @@ Demo login details (Company):
 - ViewModel + StateFlow for state management
 - Custom gesture-driven swipe card stack (no third-party swipe library)
 - Maps Compose + Play Services Location for job locations and "Jobs near you"
+- Firebase Cloud Messaging and a Firestore-triggered Cloud Function for real-time device alerts
 
 ## Main Features
 

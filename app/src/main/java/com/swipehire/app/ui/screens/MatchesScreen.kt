@@ -47,7 +47,7 @@ fun MatchesScreen(onOpenChat: (String) -> Unit, viewModel: MatchesViewModel = vi
 
     Column(Modifier.fillMaxSize()) {
         Text(
-            "Matches",
+            tr("Matches"),
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(20.dp)
         )

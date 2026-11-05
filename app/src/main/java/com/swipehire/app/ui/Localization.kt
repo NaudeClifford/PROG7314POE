@@ -11,9 +11,9 @@ fun tr(english: String): String = translate(english, LocalAppLanguage.current)
 
 fun translate(english: String, language: AppLanguage): String = when (language) {
     AppLanguage.ENGLISH -> english
-    AppLanguage.ISIZULU -> isiZulu[english] ?: pipelineZu[english] ?: extrasZu[english] ?: english
-    AppLanguage.AFRIKAANS -> afrikaans[english] ?: pipelineAf[english] ?: extrasAf[english] ?: english
-    AppLanguage.SESOTHO -> sesotho[english] ?: pipelineSt[english] ?: extrasSt[english] ?: english
+    AppLanguage.ISIZULU -> isiZulu[english] ?: pipelineZu[english] ?: extrasZu[english] ?: uiZu[english] ?: english
+    AppLanguage.AFRIKAANS -> afrikaans[english] ?: pipelineAf[english] ?: extrasAf[english] ?: uiAf[english] ?: english
+    AppLanguage.SESOTHO -> sesotho[english] ?: pipelineSt[english] ?: extrasSt[english] ?: uiSt[english] ?: english
 }
 
 private val isiZulu = mapOf(

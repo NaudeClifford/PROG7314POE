@@ -73,7 +73,7 @@ fun CreateJobScreen(onBack: () -> Unit, onPublished: () -> Unit) {
                 title = { Text(tr("Create job")) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = tr("Back"))
                     }
                 }
             )

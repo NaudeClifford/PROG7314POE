@@ -61,7 +61,7 @@ class PipelineRepository {
         val listener = firestore.collection("matches").document(matchId)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    Log.e(TAG, "stage listener failed for $matchId", error)
+                    Log.e(TAG, "Stage listener failed", error)
                     return@addSnapshotListener
                 }
                 trySend(PipelineStage.fromName(snapshot?.getString("stage")))
@@ -77,7 +77,7 @@ class PipelineRepository {
             .collection("interviews").orderBy("startAt")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    Log.e(TAG, "interview listener failed for $matchId", error)
+                    Log.e(TAG, "Interview listener failed", error)
                     return@addSnapshotListener
                 }
                 trySend(snapshot?.documents.orEmpty().mapNotNull { it.toInterview(matchId) })
@@ -139,7 +139,7 @@ class PipelineRepository {
                     )
                 )
             }.await()
-            Log.d(TAG, "Interview proposed on match $matchId")
+            Log.d(TAG, "Interview proposed")
             true
         } catch (e: CancellationException) {
             throw e
@@ -191,7 +191,7 @@ class PipelineRepository {
                     )
                 )
             }.await()
-            Log.d(TAG, "Interview $interviewId -> $newStatus")
+            Log.d(TAG, "Interview response saved: $newStatus")
             true
         } catch (e: CancellationException) {
             throw e
@@ -233,7 +233,7 @@ class PipelineRepository {
                     )
                 )
             }.await()
-            Log.d(TAG, "Interview $interviewId cancelled")
+            Log.d(TAG, "Interview cancelled")
             true
         } catch (e: CancellationException) {
             throw e
@@ -283,7 +283,7 @@ class PipelineRepository {
                     )
                 )
             }.await()
-            Log.d(TAG, "Match $matchId stage $previousStage -> $newStage by $verifiedRole")
+            Log.d(TAG, "Application stage changed: $previousStage -> $newStage by $verifiedRole")
             true
         } catch (e: CancellationException) {
             throw e

@@ -94,7 +94,7 @@ fun SettingsScreen(
             IconButton(onClick = onBack) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back to profile"
+                    contentDescription = tr("Back to profile")
                 )
             }
             Text(
@@ -195,7 +195,7 @@ fun SettingsScreen(
             Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
                 Text(
                     if (pendingOfflineActions == 0) tr("All offline changes are synchronised")
-                    else "$pendingOfflineActions ${tr("change(s) waiting to synchronise")}",
+                    else "$pendingOfflineActions ${tr(if (pendingOfflineActions == 1) "change waiting to synchronise" else "changes waiting to synchronise")}",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium
                 )

@@ -73,7 +73,6 @@ import com.swipehire.app.ui.theme.Mint20
 import com.swipehire.app.ui.theme.Mint40
 import com.swipehire.app.ui.theme.Violet20
 import com.swipehire.app.ui.theme.Violet40
-import com.swipehire.app.ui.theme.glow
 import com.swipehire.app.ui.tr
 import com.swipehire.app.util.calculateProfileStrength
 import kotlinx.coroutines.launch
@@ -180,7 +179,7 @@ fun ProfileScreen(
             Text(tr("Profile"), style = MaterialTheme.typography.headlineSmall)
             Row {
                 IconButton(onClick = onOpenSettings) {
-                    Icon(Icons.Filled.Settings, contentDescription = "Open settings")
+                    Icon(Icons.Filled.Settings, contentDescription = tr("Open settings"))
                 }
                 OutlinedButton(onClick = { editing = true }, shape = RoundedCornerShape(50)) {
                     Icon(Icons.Filled.Edit, contentDescription = null, modifier = Modifier.size(16.dp))
@@ -209,7 +208,7 @@ fun ProfileScreen(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
-                Modifier.size(76.dp).glow(accent, radiusMultiplier = 2.4f, alpha = 0.4f).clip(CircleShape)
+                Modifier.size(76.dp).clip(CircleShape)
                     .background(Brush.linearGradient(listOf(accent, accentDeep))),
                 contentAlignment = Alignment.Center
             ) {
@@ -238,8 +237,8 @@ fun ProfileScreen(
                 )
                 Spacer(Modifier.height(6.dp))
                 Text(
-                    if (profileStrength == 100) "Complete profiles are prioritised in recommendations."
-                    else "Add the remaining details to improve your recommendations.",
+                    if (profileStrength == 100) tr("Complete profiles are prioritised in recommendations.")
+                    else tr("Add the remaining details to improve your recommendations."),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -257,7 +256,7 @@ fun ProfileScreen(
         Text(about, style = MaterialTheme.typography.bodyMedium)
 
         Spacer(Modifier.height(24.dp))
-        Text(if (accountType == AccountType.STUDENT) tr("Skills") else "Hiring for", style = MaterialTheme.typography.titleMedium)
+        Text(if (accountType == AccountType.STUDENT) tr("Skills") else tr("Hiring for"), style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(10.dp))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(skills) { tag ->
@@ -282,7 +281,7 @@ fun ProfileScreen(
                     Icon(Icons.Filled.PictureAsPdf, contentDescription = null)
                 }
                 Spacer(Modifier.width(8.dp))
-                Text(if (cvUploading) "Uploading CV…" else if (cvFileName.isNotBlank()) "Replace $cvFileName" else tr("Upload CV (PDF)"))
+                Text(if (cvUploading) tr("Uploading CV…") else if (cvFileName.isNotBlank()) "${tr("Replace")} $cvFileName" else tr("Upload CV (PDF)"))
             }
             if (cvPath.isNotBlank()) {
                 TextButton(
@@ -365,14 +364,14 @@ fun ProfileScreen(
         Text(tr("Application activity"), style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(10.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            StatTile(if (accountType == AccountType.STUDENT) "Saved" else "Listings", if (accountType == AccountType.COMPANY) companyJobs.size.toString() else "—", accent, Modifier.weight(1f))
+            StatTile(if (accountType == AccountType.STUDENT) tr("Saved") else tr("Listings"), if (accountType == AccountType.COMPANY) companyJobs.size.toString() else "—", accent, Modifier.weight(1f))
             StatTile(tr("Matches"), matchCount.toString(), accent, Modifier.weight(1f))
         }
         if (accountType == AccountType.STUDENT) {
             Spacer(Modifier.height(10.dp))
             StatTile(
                 tr("Average reply time"),
-                averageReplyMillis?.let(::formatReplyTime) ?: tr("No replies yet"),
+                averageReplyMillis?.let { formatReplyTime(it) } ?: tr("No replies yet"),
                 accent,
                 Modifier.fillMaxWidth()
             )
@@ -426,12 +425,13 @@ fun ProfileScreen(
     }
 }
 
+@Composable
 private fun formatReplyTime(milliseconds: Long): String {
     val minutes = (milliseconds / 60_000).coerceAtLeast(1)
     return when {
-        minutes < 60 -> "$minutes min"
-        minutes < 1_440 -> "${minutes / 60} hr ${minutes % 60} min"
-        else -> "${minutes / 1_440} days"
+        minutes < 60 -> "$minutes ${tr("min")}"
+        minutes < 1_440 -> "${minutes / 60} ${tr("hr")} ${minutes % 60} ${tr("min")}"
+        else -> "${minutes / 1_440} ${tr(if (minutes < 2_880) "day" else "days")}"
     }
 }
 
@@ -458,10 +458,10 @@ private fun ProfileEditorDialog(
         title = { Text(tr("Edit profile")) },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(name, { name = it }, label = { Text(if (accountType == AccountType.STUDENT) "Full name" else "Company name") }, singleLine = true)
-                OutlinedTextField(headline, { headline = it }, label = { Text(if (accountType == AccountType.STUDENT) "Course / headline" else "Industry") }, singleLine = true)
-                OutlinedTextField(detail, { detail = it }, label = { Text(if (accountType == AccountType.STUDENT) "Study year" else "Location") }, singleLine = true)
-                OutlinedTextField(skills, { skills = it }, label = { Text(if (accountType == AccountType.STUDENT) "Skills (comma separated)" else "Hiring for (comma separated)") })
+                OutlinedTextField(name, { name = it }, label = { Text(if (accountType == AccountType.STUDENT) tr("Full name") else tr("Company name")) }, singleLine = true)
+                OutlinedTextField(headline, { headline = it }, label = { Text(if (accountType == AccountType.STUDENT) tr("Course / headline") else tr("Industry")) }, singleLine = true)
+                OutlinedTextField(detail, { detail = it }, label = { Text(if (accountType == AccountType.STUDENT) tr("Study year") else tr("Location")) }, singleLine = true)
+                OutlinedTextField(skills, { skills = it }, label = { Text(if (accountType == AccountType.STUDENT) tr("Skills (comma separated)") else tr("Hiring for (comma separated)")) })
                 OutlinedTextField(about, { about = it }, label = { Text(tr("About")) }, minLines = 3)
             }
         },

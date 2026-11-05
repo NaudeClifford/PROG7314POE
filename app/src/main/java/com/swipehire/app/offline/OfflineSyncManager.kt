@@ -3,6 +3,7 @@ package com.swipehire.app.offline
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
@@ -32,6 +33,7 @@ object OfflineSyncManager {
             appContext = context.applicationContext
             store = OfflineActionStore(appContext)
             initialised = true
+            Log.i("OfflineSync", "Local offline store initialised")
         }
         refreshCount()
         schedule()
@@ -43,6 +45,7 @@ object OfflineSyncManager {
         store.enqueue(userId, OfflineActionType.SET_SAVED_ITEM, "$kind:$itemId", gson.toJson(payload))
         store.cacheSavedChoice(userId, kind, itemId, saved)
         refreshCount()
+        Log.d("OfflineSync", "Saved-item change queued; pending=${_pendingCount.value}")
         schedule()
         return store.cachedSavedItems(userId)
     }
@@ -56,6 +59,7 @@ object OfflineSyncManager {
             gson.toJson(SettingsActionPayload(settings))
         )
         refreshCount()
+        Log.d("OfflineSync", "Settings change queued; pending=${_pendingCount.value}")
         schedule()
     }
 
@@ -67,6 +71,13 @@ object OfflineSyncManager {
     fun cachedSavedItems(userId: String): SavedItemsDto {
         ensureInitialised()
         return store.cachedSavedItems(userId)
+    }
+
+    fun pendingSettingsFor(userId: String): UserSettingsDto? {
+        ensureInitialised()
+        return store.pendingActions(userId)
+            .firstOrNull { it.type == OfflineActionType.UPDATE_SETTINGS }
+            ?.let { decodeSettings(it).settings }
     }
 
     fun isNetworkAvailable(): Boolean {

@@ -174,7 +174,7 @@ private fun addToCalendar(context: Context, interview: Interview, withName: Stri
     }
     try {
         context.startActivity(intent)
-        Log.d(TAG, "Opened calendar for interview ${interview.id}")
+        Log.d(TAG, "Opened calendar for interview")
     } catch (e: Exception) {
         Log.w(TAG, "No calendar app available", e)
         Toast.makeText(context, noCalendarMessage, Toast.LENGTH_SHORT).show()

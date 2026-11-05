@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.swipehire.app.data.AlertType
 import com.swipehire.app.data.AppAlert
+import com.swipehire.app.ui.LocalAppLanguage
+import com.swipehire.app.ui.localizeAlertText
 import com.swipehire.app.ui.theme.Coral
 import com.swipehire.app.ui.theme.Violet40
 import com.swipehire.app.ui.tr
@@ -96,18 +98,7 @@ fun AlertsScreen(
 
 @Composable
 private fun AlertCard(alert: AppAlert, onClick: () -> Unit) {
-    val displayTitle = when {
-        alert.type == AlertType.MATCH -> tr("New match")
-        alert.type == AlertType.INTERVIEW || alert.type == AlertType.STAGE -> tr(alert.title)
-        alert.title.startsWith("New message from ") ->
-            "${tr("New message from")} ${alert.title.removePrefix("New message from ")}"
-        else -> alert.title
-    }
-    val displayBody = if (alert.type == AlertType.MATCH && alert.body.startsWith("You matched with ")) {
-        "${tr("You matched with")} ${alert.body.removePrefix("You matched with ")}"
-    } else if (alert.type == AlertType.STAGE) {
-        "${tr("Now at stage")}: ${tr(alert.body)}"
-    } else alert.body
+    val (displayTitle, displayBody) = localizeAlertText(alert.type, alert.title, alert.body, LocalAppLanguage.current)
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         shape = RoundedCornerShape(18.dp),
