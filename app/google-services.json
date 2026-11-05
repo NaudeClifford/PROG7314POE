@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "998671821734-0fedq47tclfdfhauotr21nb373keo1p1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swipehire.app",
+            "certificate_hash": "e258f9174ded480465b64ca40e63dcc510a0c1d4"
+          }
+        },
+        {
           "client_id": "998671821734-3q7qhkji4ltlmpafh0pi3cn7s2r17p6u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
