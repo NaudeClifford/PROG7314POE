@@ -221,6 +221,9 @@ The same Android, API, and Cloud Functions checks run in GitHub Actions.
 ## Playstore Publication Readiness
 
 ### A Signed APK has been included in the GitHub Releases:
+
+Download the signed APK from the [SwipeHire GitHub Releases page](https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford/releases) under **Assets**.
+
 <img width="385" height="142" alt="image" src="https://github.com/user-attachments/assets/f39f3f91-6293-411c-9f2c-191c60941962" />
 
 
