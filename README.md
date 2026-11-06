@@ -1,4 +1,4 @@
-# SwipeHire — PROG7314 POE Final Part
+# SwipeHire - PROG7314 POE Final Part
 
 Native Kotlin + Jetpack Compose frontend for **SwipeHire**, the reverse job-matching app from the
 PROG7314 Part 1 design where companies swipe on student profiles, students swipe on job postings,
@@ -65,15 +65,18 @@ We have prepaid the application to be sent to google playstore and ready for pub
 | Role select | `ui/screens/RoleSelectScreen.kt` | Choose Student / Company — same screen serves both |<img width="385" height="788" alt="Screenshot 2026-09-22 091557" src="https://github.com/user-attachments/assets/6cd638d2-c183-46c5-8275-5c8d8f2dd2f2" />|
 | Discover | `ui/screens/DiscoverScreen.kt` | Draggable swipe-card stack (`ui/components/SwipeCardStack.kt`) |<img width="391" height="791" alt="Screenshot 2026-09-22 085927" src="https://github.com/user-attachments/assets/ca096d9c-b378-4987-9063-ecfc93e49a55" />|
 | Matches | `ui/screens/MatchesScreen.kt` | List of mutual matches with unread indicator |<img width="378" height="792" alt="Screenshot 2026-09-22 092543" src="https://github.com/user-attachments/assets/485f99cf-680d-43fc-92f0-fbcc1187620c" />|
-| Chat | `ui/screens/ChatDetailScreen.kt` | Per-match conversation, local send |<img width="378" height="792" alt="Screenshot 2026-09-22 092543" src="https://github.com/user-attachments/assets/49d78bbd-9b5b-4077-aee6-51c5b0a22756" />|
+| Chat | `ui/screens/ChatDetailScreen.kt` | Per-match conversation, local send |<img width="378" height="792" alt="Screenshot 2026-09-22 092543" src="https://github.com/user-attachments/assets/49d78bbd-9b5b-4077-aee6-51c5b0a22756"  /> <img width="406" height="904" alt="image" src="https://github.com/user-attachments/assets/c13c0d40-8d45-452a-870a-5f8bd5702fa6" />
+|
 | Profile | `ui/screens/ProfileScreen.kt` | Adapts content to Student vs Company account type |<img width="373" height="791" alt="Screenshot 2026-09-22 092620" src="https://github.com/user-attachments/assets/ce04fc50-fdf2-4f8e-a9ce-43ff0f57b821" />|
 | **Settings** | `ui/screens/SettingsScreen.kt` | **20-mark deliverable — see below** |<img width="384" height="796" alt="Screenshot 2026-09-22 090826" src="https://github.com/user-attachments/assets/f96ef047-fbf5-4dbe-bf12-9cd081e3e0d5" />|
-| Jobs near you | `ui/screens/NearbyJobsScreen.kt` | Google Map + distance-sorted list, from Discover's "Near you" button (student view) |<img width="267" height="537" alt="Screenshot 2026-09-22 135603" src="https://github.com/user-attachments/assets/2b6a4b42-5571-456e-ab45-c7bb3c9a330c" />|
+| Jobs near you | `ui/screens/NearbyJobsScreen.kt` | Google Map + distance-sorted list, from Discover's "Near you" button (student view) |<img width="738" height="1600" alt="image" src="https://github.com/user-attachments/assets/0696f007-8322-40b9-af53-6cf36fc99fd5" />
+|
 | Job location | `ui/screens/JobLocationScreen.kt` | Single job on a map with a "Get directions" deep link into Google Maps | <img width="275" height="537" alt="image" src="https://github.com/user-attachments/assets/99566277-a37b-441c-9f47-017bf42e5ff6" />|
 | Application Status | `ui/screens/ChatDetailScreen.kt` `Feature 4` | Track Application Status | <img width="406" height="904" alt="WhatsApp Image 2026-11-05 at 10 40 03 AM (1)" src="https://github.com/user-attachments/assets/8f933b20-28aa-404d-aab1-57307064d6a0" />|
 | Push Notifications | `Firebase Cloud Messaging` | Get Real-Time updates on Matches, New Job Listings, and More! | <img width="738" height="1600" alt="WhatsApp Image 2026-11-05 at 10 40 03 AM" src="https://github.com/user-attachments/assets/49d015df-c453-4af4-850e-7da0119e8e34" />|
 | Schedule Interview | `Feature 5` | Propose an Interview with a Date, Time, Duration, Format, and More. Check the Pipeline for tracking. | <img width="403" height="907" alt="WhatsApp Image 2026-11-05 at 10 43 08 AM" src="https://github.com/user-attachments/assets/2ee4b79b-1829-431e-aed6-e0675695c813" /> <img width="403" height="902" alt="WhatsApp Image 2026-11-05 at 10 44 34 AM" src="https://github.com/user-attachments/assets/eab6684e-bfbb-4889-98b4-a22b579883a2" />|
-| Biometric Lock | `Security` | Biometric Security Feature | <img width="402" height="381" alt="WhatsApp Image 2026-11-05 at 10 44 59 AM" src="https://github.com/user-attachments/assets/98c9d2d9-0587-4b92-8704-4f885700fcf5" />|
+| Biometric Lock and Offline sync| `Security` `Offline sync` | Biometric Security Feature and offline sync | <img width="738" height="1600" alt="image" src="https://github.com/user-attachments/assets/acbea5a6-2cc1-4f2e-82fd-dfcd7dc8a0d1" />
+<img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/a1d6f544-40f4-4f92-b26d-5d81956c78e6" />|
 
 
 ## Main Features
@@ -100,12 +103,12 @@ Every control on the Settings screen reads from and writes to Jetpack **DataStor
 app restarts — this is what satisfies the "Application State: Changing and saving user
 preferences via a dedicated settings menu" requirement:
 
-- **Account type** — Student / Company toggle (shared UI, drives Discover + Profile content)
-- **Notifications** — push master switch, match alerts, message alerts
-- **Privacy** — profile visibility toggle
+- **Account type** - Student / Company toggle (shared UI, drives Discover + Profile content)
+- **Notifications** - push master switch, match alerts, message alerts
+- **Privacy** - profile visibility toggle
 - **Language** - change language of the application
-- **Appearance** — Light / Dark / Match system theme, applied live via `SwipeHireTheme`
-- **Security** — biometric lock toggle (UI hook — wire to `BiometricPrompt` once auth lands) *Please note that this function does not work yet. Only to be implemented in part 3*
+- **Appearance** - Light / Dark / Match system theme, applied live via `SwipeHireTheme`
+- **Security** - biometric lock toggle (UI hook — wire to `BiometricPrompt` once auth lands) *Please note that this function does not work yet. Only to be implemented in part 3*
 - **Log out**
 
 
@@ -218,7 +221,8 @@ Demo login details (Company):
 
 <img width="378" height="792" alt="Screenshot 2026-09-22 092543" src="https://github.com/user-attachments/assets/485f99cf-680d-43fc-92f0-fbcc1187620c" />
 
-<img width="267" height="537" alt="Screenshot 2026-09-22 135603" src="https://github.com/user-attachments/assets/2b6a4b42-5571-456e-ab45-c7bb3c9a330c" />
+<img width="738" height="1600" alt="image" src="https://github.com/user-attachments/assets/7c4a9bef-8843-4c2a-aa7b-e7333a6d0512" />
+
 
 ## Reference List
 
