@@ -25,6 +25,9 @@ with a potential new Employee and Company.
 ## Classroom50 Repository Link
 https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford.git
 
+## Repository Link for Part 2
+This i where we did a lot of the work for part 3 and worked in separate branches for the different features and changes that were being made. The final releases, workflows and documents were done in the the Final Poe repository. 
+https://github.com/EMGPRS/prog7314-2026-poe-part-2-group-naudeclifford
 
 ## Part 3 New Features:
 We had added biometric login, and also a session state that includes offline sync with the application and the api.
@@ -67,9 +70,9 @@ We have prepaid the application to be sent to google playstore and ready for pub
 | **Settings** | `ui/screens/SettingsScreen.kt` | **20-mark deliverable — see below** |<img width="384" height="796" alt="Screenshot 2026-09-22 090826" src="https://github.com/user-attachments/assets/f96ef047-fbf5-4dbe-bf12-9cd081e3e0d5" />|
 | Jobs near you | `ui/screens/NearbyJobsScreen.kt` | Google Map + distance-sorted list, from Discover's "Near you" button (student view) |<img width="267" height="537" alt="Screenshot 2026-09-22 135603" src="https://github.com/user-attachments/assets/2b6a4b42-5571-456e-ab45-c7bb3c9a330c" />|
 | Job location | `ui/screens/JobLocationScreen.kt` | Single job on a map with a "Get directions" deep link into Google Maps | <img width="275" height="537" alt="image" src="https://github.com/user-attachments/assets/99566277-a37b-441c-9f47-017bf42e5ff6" />|
-| Application Status | `ui/screens/ChatDetailScreen.kt` | Track Application Status | <img width="406" height="904" alt="WhatsApp Image 2026-11-05 at 10 40 03 AM (1)" src="https://github.com/user-attachments/assets/8f933b20-28aa-404d-aab1-57307064d6a0" />|
+| Application Status | `ui/screens/ChatDetailScreen.kt` `Feature 4` | Track Application Status | <img width="406" height="904" alt="WhatsApp Image 2026-11-05 at 10 40 03 AM (1)" src="https://github.com/user-attachments/assets/8f933b20-28aa-404d-aab1-57307064d6a0" />|
 | Push Notifications | `Firebase Cloud Messaging` | Get Real-Time updates on Matches, New Job Listings, and More! | <img width="738" height="1600" alt="WhatsApp Image 2026-11-05 at 10 40 03 AM" src="https://github.com/user-attachments/assets/49d015df-c453-4af4-850e-7da0119e8e34" />|
-| Schedule Interview | `Feature 4 & 5` | Propose an Interview with a Date, Time, Duration, Format, and More. Check the Pipeline for tracking. | <img width="403" height="907" alt="WhatsApp Image 2026-11-05 at 10 43 08 AM" src="https://github.com/user-attachments/assets/2ee4b79b-1829-431e-aed6-e0675695c813" /> <img width="403" height="902" alt="WhatsApp Image 2026-11-05 at 10 44 34 AM" src="https://github.com/user-attachments/assets/eab6684e-bfbb-4889-98b4-a22b579883a2" />|
+| Schedule Interview | `Feature 5` | Propose an Interview with a Date, Time, Duration, Format, and More. Check the Pipeline for tracking. | <img width="403" height="907" alt="WhatsApp Image 2026-11-05 at 10 43 08 AM" src="https://github.com/user-attachments/assets/2ee4b79b-1829-431e-aed6-e0675695c813" /> <img width="403" height="902" alt="WhatsApp Image 2026-11-05 at 10 44 34 AM" src="https://github.com/user-attachments/assets/eab6684e-bfbb-4889-98b4-a22b579883a2" />|
 | Biometric Lock | `Security` | Biometric Security Feature | <img width="402" height="381" alt="WhatsApp Image 2026-11-05 at 10 44 59 AM" src="https://github.com/user-attachments/assets/98c9d2d9-0587-4b92-8704-4f885700fcf5" />|
 
 
@@ -87,9 +90,7 @@ The following three features were described in the Part 1 planning document and 
 
 5. Application Pipeline Tracker: What it does: A visual timeline that tracks a candidate's progress: Matched → Interview → Offer → Hired (or Declined). It has role-based rules (e.g., only the company can move a candidate to "Offer", only the student can "Accept Offer"). It shows live updates on the Matches screen and in the Chat timeline. Where to find it in the app: The timeline inside the Chat panel, and the colored status chips on the main Matches screen list.
 
-Feature Added After Lecturer Feedback:
-
-Maps, geocoding and jobs near you: In response to lecturer feedback, we added location-based job discovery. The API converts a job’s work address into map coordinates. Students can view job markers on Google Maps, see jobs ordered by distance from their location and open directions to a job.
+6. Maps, geocoding and jobs near you: In response to lecturer feedback, we added location-based job discovery. The API converts a job’s work address into map coordinates. Students can view job markers on Google Maps, see jobs ordered by distance from their location and open directions to a job.
 
 
 ## Settings menu (Application State requirement)
@@ -218,3 +219,22 @@ Demo login details (Company):
 <img width="378" height="792" alt="Screenshot 2026-09-22 092543" src="https://github.com/user-attachments/assets/485f99cf-680d-43fc-92f0-fbcc1187620c" />
 
 <img width="267" height="537" alt="Screenshot 2026-09-22 135603" src="https://github.com/user-attachments/assets/2b6a4b42-5571-456e-ab45-c7bb3c9a330c" />
+
+## Reference List
+
+- Firebase (2026a) Authenticate with Google on Android. Available at: firebase.google.com/docs/auth/android/google-signin (Accessed: 4 November 2026).
+
+- Firebase (2026b) Google services Gradle plugin and JSON config file. Available at: firebase.google.com/docs/android/google-services-plugin-and-file (Accessed: 4 November 2026).
+
+- Firebase (2026c) Learn about and manage API keys for Firebase. Available at: firebase.google.com/docs/projects/api-keys (Accessed: 5 November 2026).
+
+- Firebase (2026d) Troubleshooting & FAQ for Android and Firebase. Available at: firebase.google.com/docs/android/troubleshooting-faq (Accessed: 5 November 2026).
+
+- GitHub (n.d.a) About protected branches. Available at: docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches (Accessed: 5 November 2026).
+
+- GitHub (n.d.b) Deploying with GitHub Actions. Available at: docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/control-deployments (Accessed: 5 November 2026).
+
+- GitHub (n.d.c) Workflow artifacts. Available at: docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts (Accessed: 5 November 2026).
+
+- GitHub (n.d.d) Workflow syntax for GitHub Actions. Available at: docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax (Accessed: 5 November 2026).
+
