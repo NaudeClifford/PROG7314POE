@@ -257,3 +257,31 @@ Download the signed APK from the [SwipeHire GitHub Releases page](https://github
 
 - GitHub (n.d.d) Workflow syntax for GitHub Actions. Available at: docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax (Accessed: 5 November 2026).
 
+
+- Firebase (2026e) Get real-time updates with Cloud Firestore. Available at: firebase.google.com/docs/firestore/query-data/listen (Accessed: 6 November 2026).
+
+- Firebase (2026f) Write conditions for Cloud Firestore Security Rules. Available at: firebase.google.com/docs/firestore/security/rules-conditions (Accessed: 6 November 2026).
+
+- Firebase (2026g) Add data to Cloud Firestore. Available at: firebase.google.com/docs/firestore/manage-data/add-data (Accessed: 6 November 2026).
+
+- Firebase (2026h) Cloud Firestore data model. Available at: firebase.google.com/docs/firestore/data-model (Accessed: 6 November 2026).
+
+- Firebase (2026i) Access data offline. Available at: firebase.google.com/docs/firestore/manage-data/enable-offline (Accessed: 6 November 2026).
+
+- Firebase (2026j) Get started with Firebase Cloud Messaging in Android apps. Available at: firebase.google.com/docs/cloud-messaging/android/get-started (Accessed: 6 November 2026).
+
+
+- Android Developers (2026a) Date pickers. Available at: developer.android.com/develop/ui/compose/components/datepickers (Accessed: 6 November 2026).
+
+- Android Developers (2026b) Time pickers. Available at: developer.android.com/develop/ui/compose/components/time-pickers (Accessed: 6 November 2026).
+
+- Android Developers (2026c) Calendar provider overview. Available at: developer.android.com/guide/topics/providers/calendar-provider (Accessed: 6 November 2026).
+	
+- Android Developers (2026d) ViewModel overview. Available at: developer.android.com/topic/libraries/architecture/viewmodel (Accessed: 6 November 2026).
+
+- Android Developers (2026e) StateFlow and SharedFlow. Available at: developer.android.com/kotlin/flow/stateflow-and-sharedflow (Accessed: 6 November 2026).
+	
+ - Android Developers (2026f) Log. Available at: developer.android.com/reference/android/util/Log (Accessed: 6 November 2026).
+	
+  - Android Developers (2026g) Build local unit tests. Available at: developer.android.com/training/testing/local-tests (Accessed: 6 November 2026).
+
