@@ -92,6 +92,8 @@ The following three features were described in the Part 1 planning document and 
 
 6. Maps, geocoding and jobs near you: In response to lecturer feedback, we added location-based job discovery. The API converts a job’s work address into map coordinates. Students can view job markers on Google Maps, see jobs ordered by distance from their location and open directions to a job.
 
+7. A milestone feature has also been implemented where user can earn badges based off of the number of matches made.
+
 
 ## Settings menu (Application State requirement)
 
@@ -105,7 +107,8 @@ preferences via a dedicated settings menu" requirement:
 - **Privacy** - profile visibility toggle
 - **Language** - change language of the application
 - **Appearance** - Light / Dark / Match system theme, applied live via `SwipeHireTheme`
-- **Security** - biometric lock toggle (UI hook — wire to `BiometricPrompt` once auth lands) *Please note that this function does not work yet. Only to be implemented in part 3*
+- **Security** - biometric lock toggle (A fingerprint or face needs to be added to the device before this feature can be enabled)
+- **Offline Sync** - Just a banner notifying a user that any changes they made while offline will be saved and updated once they are nack online
 - **Log out**
 
 
