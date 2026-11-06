@@ -130,6 +130,10 @@ preferences via a dedicated settings menu" requirement:
 
 
 
+## System logging
+
+SwipeHire records app activity and state changes with Android's `Log` utility. `MainActivity` logs lifecycle and biometric lock events; sign-in and settings code records authentication outcomes and preference changes; the offline components log queued changes, synchronisation and retries; and the notification and application pipeline components log delivery and progress updates. These messages help trace a user's actions and diagnose failures in Android Studio's **Logcat**. Filter by tags such as `SwipeHireActivity`, `SwipeHireAuth`, `SwipeHireSettings`, `OfflineSync`, `SwipeHirePush` or `PipelineRepo`. The Azure-hosted API also uses .NET `ILogger` to record request cancellations, rate-limit events and Firestore errors.
+
 ## Stack
 
 - Kotlin, Jetpack Compose (Material 3), Navigation Compose
