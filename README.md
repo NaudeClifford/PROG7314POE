@@ -171,26 +171,40 @@ preferences via a dedicated settings menu" requirement:
 
 
 
-## Setup for Project
+## Set up and run SwipeHire
 
-### Android app
+### Install the signed APK on an Android phone
 
-1. Install Android Studio with Android SDK 34 and JDK 17. Android Studio normally creates `local.properties` with `sdk.dir` pointing to the Android SDK.
-2. The committed `app/google-services.json` is the Firebase Android configuration for `com.swipehire.app`. If you use a different Firebase project, replace it with that project's matching Android configuration file. Register the debug and release signing SHA-1 fingerprints in Firebase for Google sign-in.
-3. Add these values to the gitignored `local.properties` file:
+The signed APK runs on Android 8.0 (API 26) or newer. It connects to the [SwipeHire API hosted on Azure](https://swipehire-api-h7d3aqh2ahb3aqcu.southafricanorth-01.azurewebsites.net/) and to Firebase. You do not need to run the API locally, install Android Studio, or provide API credentials to use the APK. Sign-in and cloud data need an internet connection; saved items and account settings support the offline synchronisation described above.
+
+1. Open the project's [GitHub Releases](https://github.com/EMGPRS/prog7314-2026-poe-final-naudeclifford/releases) page and choose the release containing the signed APK.
+2. Under **Assets**, download `swipehire-signed-app-release.apk`. Choose the APK asset, not a **Source code** ZIP file. If you download it on a computer, transfer the APK to the phone.
+3. On the phone, open the downloaded APK from **Files** or **Downloads**. If Android asks for permission to install from that source, allow it, then tap **Install**.
+4. Open SwipeHire and sign in with one of the demo accounts below.
+
+The APK already contains its build configuration. A Maps API key and `local.properties` file are only needed when building the app from source.
+
+### Demo accounts
+
+| Account | Email | Password |
+|---|---|---|
+| Student | `lerato.student@swipehire.example.com` | `StudentDemo!2026` |
+| Company | `company.demo@swipehire.example.com` | `CompanyDemo!2026` |
+
+### Build from source (contributors only)
+
+Install Android Studio with Android SDK 34 and JDK 17. The repository includes `app/google-services.json`. Android Studio normally creates the gitignored `local.properties` file with `sdk.dir` pointing to your Android SDK. Add the deployed API address and your Android-restricted Maps key to that file:
 
 ```properties
-API_BASE_URL=https://<your-azure-app>.azurewebsites.net/
+API_BASE_URL=https://swipehire-api-h7d3aqh2ahb3aqcu.southafricanorth-01.azurewebsites.net/
 MAPS_API_KEY=<your-Android-restricted-Maps-key>
 ```
 
-The default API URL (`http://10.0.2.2:5000/`) reaches a locally running API from an Android emulator. Use the Azure HTTPS URL for a physical phone. Restrict the Android Maps key by package name and signing certificate.
+A source build without your Maps key will not display the interactive map. For Google sign-in in a newly signed build, register that build's SHA-1 fingerprint in Firebase. The API remains hosted on Azure; no local API process is required.
 
-### API
+### Developer checks (optional)
 
-The API targets .NET 10. Set `Firebase__ProjectId` and `GoogleMaps__ApiKey` in your local environment or Azure App Service settings. Provide Firestore credentials using `GOOGLE_APPLICATION_CREDENTIALS` (a local service account JSON file path) or `GoogleCredentials__Json` (the JSON content). Keep service account credentials and Maps server keys out of the repository.
-
-### Run the checks locally
+These checks verify the source code and are not required to install the APK:
 
 ```powershell
 .\gradlew.bat :app:testDebugUnitTest :app:assembleDebug
@@ -201,19 +215,6 @@ npm.cmd --prefix functions test
 ```
 
 The same Android, API, and Cloud Functions checks run in GitHub Actions.
-
-## Project Startup Instructions APK
-Download the APK to a mobile device for the fully functional mobile app. If trying to run in Android Studio, the project will work, except for the interactive maps
-as the API Key is not included in GitHub. Hence, we suggest downloading the APK onto a mobile device for a better experience. 
-To Download the APK, simply go to the Tags of this repository.
-
-Demo login details (Student):
-- Email - lerato.student@swipehire.example.com
-- Password - StudentDemo!2026
-
-Demo login details (Company):
-- Email - company.demo@swipehire.example.com
-- Password - CompanyDemo!2026
 
 
 ## Playstore Publication Readiness
