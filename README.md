@@ -125,7 +125,8 @@ preferences via a dedicated settings menu" requirement:
 
 
 
-<img width="386" height="786" alt="Screenshot 2026-09-22 090843" src="https://github.com/user-attachments/assets/b6982c57-92b4-4470-8e0e-c3a1e748388c" />
+<img width="386" height="786"  alt="image" src="https://github.com/user-attachments/assets/30ac5b33-0c39-4000-8cc5-13e7f4bf5600" />
+
 
 
 
