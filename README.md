@@ -95,6 +95,15 @@ The following three features were described in the Part 1 planning document and 
 7. A milestone feature has also been implemented where user can earn badges based off of the number of matches made.
 
 
+## Offline mode and synchronisation
+
+Signed-in users can save or unsave jobs and student profiles, and change account settings, while their phone is offline. Previously loaded saved items remain available from a local cache, and new choices appear immediately. The app stores pending changes in an on-device SQLite outbox (`app/src/main/java/com/swipehire/app/offline/OfflineActionStore.kt`). Repeated changes to the same saved item are combined so that the latest choice is sent.
+
+`OfflineSyncManager` schedules a WorkManager task that waits for network access. `OfflineSyncWorker` sends queued saved-item and account-setting changes to the REST API when connectivity returns. It removes each change after a successful response and retries failed requests. The **Settings → Offline synchronisation** section shows how many changes are still waiting. Device preferences such as the theme are also stored locally using DataStore.
+
+To demonstrate this feature, sign in and load saved items while online, disconnect the phone, then save or unsave an item or change a notification or privacy setting. Check the pending count in Settings. Reconnect and confirm that the count returns to zero and the change appears in the online data. This SQLite queue covers saved items and account settings; other features may require a connection.
+
+
 ## Settings menu (Application State requirement)
 
 Every control on the Settings screen reads from and writes to Jetpack **DataStore Preferences**
@@ -108,7 +117,7 @@ preferences via a dedicated settings menu" requirement:
 - **Language** - change language of the application
 - **Appearance** - Light / Dark / Match system theme, applied live via `SwipeHireTheme`
 - **Security** - biometric lock toggle (A fingerprint or face needs to be added to the device before this feature can be enabled)
-- **Offline Sync** - Just a banner notifying a user that any changes they made while offline will be saved and updated once they are nack online
+- **Offline synchronisation** - shows the pending count for saved-item and account-setting changes; see the offline section above
 - **Log out**
 
 
@@ -128,6 +137,7 @@ preferences via a dedicated settings menu" requirement:
 - Custom gesture-driven swipe card stack (no third-party swipe library)
 - Maps Compose + Play Services Location for job locations and "Jobs near you"
 - Firebase Cloud Messaging and a Firestore-triggered Cloud Function for real-time device alerts
+- SQLite outbox and WorkManager for saved-item and account-setting synchronisation
 
 
 
